@@ -1,0 +1,5 @@
+
+# metcs633timebox
+
+Team #2's final project. This apps purpose is to pull events from a Google Calendar and analyze how much time was spent doing what in a day/week/month
+
