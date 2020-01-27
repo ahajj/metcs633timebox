@@ -6,6 +6,19 @@
 	<Page
 		id="page"
 		title="{i18n>title}">
-		<content></content>
+		<content>
+			<HBox>
+				<Button id="signButton"
+						text="Sign into Google"
+						press="onSignInOutGooglePress">
+				</Button>
+				<Button text="Get Calendars"
+						press="onGetCalendarsPress">
+				</Button>
+			</HBox>
+			<Label id="configLabel"
+					text="Not connected to Google...">
+			</Label>
+		</content>
 	</Page>
 </mvc:View>
