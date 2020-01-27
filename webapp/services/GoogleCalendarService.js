@@ -8,8 +8,8 @@ sap.ui.define("com/metcs633/services/GoogleCalendarService", [
 	var Utils = {};
 
 	      // Client ID and API key from the Developer Console
-      var CLIENT_ID = '782211928709-49gkv11kmh5mji6m79rs9df57ba3u6pv.apps.googleusercontent.com';
-      var API_KEY = 'AIzaSyBrQSmVrwuA4-pR6jO5UdfizdTRzqDQnn0';
+      var CLIENT_ID = '';
+      var API_KEY = '';
 
       // Array of API discovery doc URLs for APIs used by the quickstart
       var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
