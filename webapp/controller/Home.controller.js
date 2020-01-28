@@ -26,13 +26,9 @@ sap.ui.define([
   		if(signedInGoogle)
   		{
   			GoogleCalendarService.signOut(this);
-  			this.getView().byId("signButton").setText("Sign Into Google");
-  			this.getView().byId("configLabel").setText("Connected to Google! Now click Sign Into Google to login.");
   		}
   		else{
   			GoogleCalendarService.signIn(this);
-  			this.getView().byId("signButton").setText("Sign Out of Google");
-  			this.getView().byId("configLabel").setText("Connected to Google! Now click Sign Out of Google to logout.");
   		}
   		signedInGoogle = !signedInGoogle;
     },
