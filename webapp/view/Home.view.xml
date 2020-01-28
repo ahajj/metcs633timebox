@@ -2,22 +2,48 @@
 	controllerName="com.metcs633.controller.Home"
 	displayBlock="true"
 	xmlns="sap.m"
-	xmlns:mvc="sap.ui.core.mvc">
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core">
 	<Page
 		id="page"
-		title="{i18n>title}">
+		title="{i18n>title}"
+		class="sapUiResponsiveContentPadding">
 		<content>
 			<HBox>
-				<Button id="signButton"
-						text="Sign into Google"
-						press="onSignInOutGooglePress">
+				<Button 
+					id="signButton"
+					text="Sign into Google"
+					press="onSignInOutGooglePress"
+					class="sapUiTinyMarginEnd">
 				</Button>
-				<Button text="Get Calendars"
-						press="onGetCalendarsPress">
+				<Button 
+					id="getCalendarsBtn"
+					text="Get Calendars"
+					enabled="false"
+					press="onGetCalendarsPress"
+					class="sapUiTinyMarginEnd">
 				</Button>
+				<ComboBox
+					placeholder="Choose a Calendar"
+					id="calendarComboBox"
+					enabled="false"
+					busyIndicatorDelay="0"
+					items="{
+						path: '/'
+					}"
+					class="sapUiTinyMarginEnd"
+					selectionChange="calendarSelectionChange">
+					<core:Item key="{id}" text="{name}" />
+				</ComboBox>
 			</HBox>
-			<Label id="configLabel"
-					text="Not connected to Google...">
+			<Label
+				class="sapUiSmallMarginTop sapUiSmallMarginEnd"
+				text="Status:">
+			</Label>
+			<Label 
+				id="configLabel"
+				class="sapUiSmallMarginTop"
+				text="Not connected to Google...">
 			</Label>
 		</content>
 	</Page>
