@@ -20,15 +20,15 @@ sap.ui.define("com/metcs633/services/GoogleCalendarService", [
 	// Function to authenticate the user and choose the Google Account
 	Utils.signIn = function (event) {
         gapi.auth2.getAuthInstance().signIn();
-        event.getView().byId("getCalendarsBtn").setEnabled(true);
      	event.getView().byId("signButton").setText("Sign Out of Google");
-  		event.getView().byId("configLabel").setText("Connected to Google! Now click get Calendars.");
+  		event.getView().byId("configLabel").setText("Connected to Google!");
+  		     	// get the list of calendars and pass in the combobox so it can filled
+      	this.getCalendars(event);
     };
 
 	// Function to signout of Google
 	Utils.signOut = function(event) {
 	        gapi.auth2.getAuthInstance().signOut();
-            event.getView().byId("getCalendarsBtn").setEnabled(false);
   			event.getView().byId("calendarComboBox").setEnabled(false);
      		event.getView().byId("signButton").setText("Sign Into Google");
   			event.getView().byId("configLabel").setText("Connected to Google! Now click Sign into Google");
@@ -102,12 +102,90 @@ sap.ui.define("com/metcs633/services/GoogleCalendarService", [
 			
 			listModel.setData(parsedList);
 			calendarDropDown.setModel(listModel);
+			controller.getView().byId("calendarSelectionPanel").setVisible(true);
 			calendarDropDown.setBusy(false);
-			calendarDropDown.setEnabled(true);
 			statusLabel.setText("Loaded calendars!")
 
 		});
 		console.log(listOfCalendars);
+	}
+
+	Utils.getListOfEventsFromCalendarInDateRange = function(calendar, startDate, endDate, controller) {
+
+		// the calendar key is what Gooogle Calendar API needs
+		var calendarKey = calendar.getKey();
+		var startDateString = startDate.toISOString();
+		var endDateString = endDate.toISOString();
+
+		var me = this;
+
+		// get the list of events in the calendar
+        gapi.client.calendar.events.list({
+	        'calendarId': calendarKey,
+	        'timeMin': startDateString,
+	        'timeMax': endDateString,
+	        'showDeleted': false,
+	        'singleEvents': true,
+	        'orderBy': 'startTime'
+        }).then(function(response) {
+	        var events = response.result.items;
+	        console.log(events);
+	        me.parseListOfEvents(events, controller);
+        });
+
+	},
+
+	Utils.parseISOStringToDate = function(string) {
+		var b = string.split(/\D+/);
+		return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
+	},
+
+	Utils.parseListOfEvents = function(events, controller) {
+		var parsedEvents = [];
+		var dataForChart = [];
+        for (var i = 0; i < events.length; i++) {
+    		var parsedEvent = {};
+
+    		// get the events start date & time.  Use date if date time is not there
+		    var event = events[i];
+
+		    var startTime = (event.start.dateTime) ? event.start.dateTime : event.start.date;
+		    var endTime = (event.end.dateTime) ? event.end.dateTime : event.end.date;
+		    var description = (event.description) ? event.description : "";
+
+		    parsedEvent.name = event.summary;
+		    parsedEvent.description = description;
+		    parsedEvent.startTime = this.parseISOStringToDate(startTime);
+		    parsedEvent.endTime = this.parseISOStringToDate(endTime);
+
+		    // now get the time difference in hours between the start time and the end time
+		    parsedEvent.time = Math.ceil(Math.abs(parsedEvent.endTime - parsedEvent.startTime) / (1000 * 60 * 60));
+
+		    // now fill in a row for thw chart data
+		    var curRow = [];
+		    curRow.push(parsedEvent.name);
+		    curRow.push(parsedEvent.time);
+		    dataForChart.push(curRow);
+
+		    // add the parsed event to the list
+		    parsedEvents.push(parsedEvent);
+        }
+
+        		// Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Event');
+        data.addColumn('number', 'Hours');
+        data.addRows(dataForChart);
+        // Set chart options
+        var options = {
+            'title': 'How Much Time Spent per Event',
+            'width': 1000,
+            'height': 1000
+        };
+        var HBoxDomRef = controller.getView().byId("barChartPanel").getDomRef();
+        // Instantiate and draw our chart, passing in our HBox.
+        var chart = new google.visualization.PieChart(HBoxDomRef);
+        chart.draw(data, options);
 	}
 
   return Utils;

@@ -34,15 +34,61 @@ sap.ui.define([
     },
 
     onGetCalendarsPress:function(event) {
-      	// get the list of calendars and pass in the combobox so it can filled
-      	GoogleCalendarService.getCalendars(this);
+ 
+    },
+
+    validateCalendarStartEndDate:function(event) {
+    	// only enable the Go button if
+    	// A calendar is selected, a start date and an end date are selected
+    	var calendarDropDown = this.getView().byId("calendarComboBox");
+    	var dtpStart = this.getView().byId("DTP1");
+    	var dtpEnd = this.getView().byId("DTP2");
+
+    	if (calendarDropDown.getSelectedItem() && dtpStart.getValue() && dtpEnd.getValue())
+    	{
+    		this.getView().byId("goButton").setEnabled(true);
+    	}
+    	else{
+
+    		this.getView().byId("goButton").setEnabled(false);
+    	}
+
+    },
+
+    goButton:function(event){
+    	// figure out the min and max time in order to query google calendar
+    	// this button doesn't get enabled until there is data in all 3 prompts (calendar, start & end date)
+    	var calendarDropDown = this.getView().byId("calendarComboBox");
+    	var dtpStart = this.getView().byId("DTP1");
+    	var dtpEnd = this.getView().byId("DTP2");
+
+    	// First, we need the selected calendar
+    	var selectedCalendar = calendarDropDown.getSelectedItem();
+
+    	// then we need the start date time
+    	var startTime = dtpStart.getDateValue();
+
+    	// then we need the end date date
+    	var endTime =dtpEnd.getDateValue();
+
+    	GoogleCalendarService.getListOfEventsFromCalendarInDateRange(selectedCalendar, startTime, endTime, this);
+
     },
 
     calendarSelectionChange:function(event) {
-
+		this.validateCalendarStartEndDate();
       	// acknowledge the selection change and update the status accordingly
       	this.getView().byId("configLabel").setText("Calendar '" + event.getParameters("selectedItem").selectedItem.getText() + "' loaded.");
+    },
 
+    handleStartDateChange:function(event) {
+
+		this.validateCalendarStartEndDate();
+    },
+
+    handleEndDateChange:function(event) {
+
+		this.validateCalendarStartEndDate();
     }
 
 	});

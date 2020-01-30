@@ -9,6 +9,8 @@
 		title="{i18n>title}"
 		class="sapUiResponsiveContentPadding">
 		<content>
+			<Text class="sapUiSmallMarginTopBottom" text="Welcome to the Timebox Tool!  The first step is to sign in to Google, then choose the calendar you would like to analyze!">
+			</Text>
 			<HBox>
 				<Button 
 					id="signButton"
@@ -16,26 +18,49 @@
 					press="onSignInOutGooglePress"
 					class="sapUiTinyMarginEnd">
 				</Button>
-				<Button 
-					id="getCalendarsBtn"
-					text="Get Calendars"
-					enabled="false"
-					press="onGetCalendarsPress"
-					class="sapUiTinyMarginEnd">
-				</Button>
-				<ComboBox
-					placeholder="Choose a Calendar"
-					id="calendarComboBox"
-					enabled="false"
-					busyIndicatorDelay="0"
-					items="{
-						path: '/'
-					}"
-					class="sapUiTinyMarginEnd"
-					selectionChange="calendarSelectionChange">
-					<core:Item key="{id}" text="{name}" />
-				</ComboBox>
 			</HBox>
+			<Panel
+				id="calendarSelectionPanel"
+				visible="false">
+				<Text class="sapUiSmallMarginTopBottom" text="Next, choose the calendar from your account, as well as the start and end date"> 
+				</Text>
+				<VBox class = "sapUiSmallMarginTopBottom">
+
+					<Label text="Choose a Calendar: " labelFor="calendarComboBox"/>
+					<ComboBox
+						placeholder="Choose a Calendar"
+						id="calendarComboBox"
+						busyIndicatorDelay="0"
+						items="{
+							path: '/'
+						}"
+						class="sapUiTinyMarginEnd"
+						required="true"
+						selectionChange="calendarSelectionChange">
+						<core:Item key="{id}" text="{name}" />
+					</ComboBox>
+					<Label text="Choose a start date: " labelFor="DTP1"/>
+					<DateTimePicker
+						id="DTP1"
+						placeholder="Enter Date ..."
+						change="handleStartDateChange"
+						required="true"
+						class="sapUiSmallMarginBottom"/>
+					<Label text="Choose an end date: " labelFor="DTP2"/>
+					<DateTimePicker
+						id="DTP2"
+						placeholder="Enter Date ..."
+						required="true"
+						change="handleEndDateChange"
+						class="sapUiSmallMarginBottom"/>
+					<Button
+						id="goButton"
+						text="Go!"
+						enabled="false"
+						press="goButton">
+					</Button>
+				</VBox>
+			</Panel>
 			<Label
 				class="sapUiSmallMarginTop sapUiSmallMarginEnd"
 				text="Status:">
@@ -45,6 +70,10 @@
 				class="sapUiSmallMarginTop"
 				text="Not connected to Google...">
 			</Label>
+			<Panel
+				id="barChartPanel">
+
+			</Panel>
 		</content>
 	</Page>
 </mvc:View>
