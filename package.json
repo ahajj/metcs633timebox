@@ -4,7 +4,8 @@
   "description": "Best-practice starting point for building a freestyle app",
   "private": true,
   "scripts": {
-    "start": "ui5 serve",
+    "start": "ui5 serve && node ./bin/www",
+    "start-service": "node ./bin/www",
     "lint": "eslint webapp",
     "karma": "karma start",
     "karma-ci": "karma start karma-ci.conf.js",
@@ -16,7 +17,22 @@
     "@openui5/sap.m": "^1.52.5",
     "@openui5/sap.ui.core": "^1.52.5",
     "@openui5/sap.ui.layout": "^1.52.5",
-    "@openui5/themelib_sap_belize": "^1.52.5"
+    "@openui5/themelib_sap_belize": "^1.52.5",
+    "@microsoft/microsoft-graph-client": "^1.0.0",
+    "axios": "^0.19.2",
+    "body-parser": "~1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "dotenv": "^5.0.0",
+    "express": "~4.15.5",
+    "hbs": "~4.0.1",
+    "jsonwebtoken": "^8.1.1",
+    "lodash": "^4.17.15",
+    "morgan": "~1.9.0",
+    "msal": "^1.2.1",
+    "qs": "^6.9.1",
+    "serve-favicon": "~2.4.5",
+    "simple-oauth2": "^3.0.0"
   },
   "devDependencies": {
     "@ui5/cli": "^1.0.0",
