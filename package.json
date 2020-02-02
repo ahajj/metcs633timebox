@@ -4,7 +4,8 @@
   "description": "Best-practice starting point for building a freestyle app",
   "private": true,
   "scripts": {
-    "start": "ui5 serve && node ./bin/www",
+    "start": "ui5 serve",
+    "start-proj": "python -m SimpleHTTPServer 8000 && node ./bin/www",
     "start-service": "node ./bin/www",
     "lint": "eslint webapp",
     "karma": "karma start",
