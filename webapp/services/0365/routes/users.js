@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const helper = require('../helpers/auth');
 /* GET /calendar */
-router.get('/users', async function (req, res) {
+router.get('/', async function (req, res) {
   let parms = {};
   const client = await helper.getGraphClient() || null; //Get client to make calls to Graph API
 
@@ -24,7 +24,7 @@ router.get('/users', async function (req, res) {
     res.status(404).send('Grapgh client could not be established.');
   }
 });
-
+//TODO check
 router.get('/users/:name', async function (req, res) {
   let parms = {};
   const client = await helper.getGraphClient() || null; //Get client to make calls to Graph API
