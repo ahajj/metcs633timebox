@@ -53,6 +53,7 @@ router.get('/', async function (req, res) {
   }
 });
 
+
 router.get('/time', async function (req, res) {
   //Get all events
   let parms = {};
@@ -85,14 +86,24 @@ router.get('/time', async function (req, res) {
         .get();
       parms.result = result;
 
-      let retCategories = [];
+      let catTimeTotals = {};
       if (parms.result && parms.result.value) {
         parms.result.value.forEach(element => {
-          retCategories = retCategories.concat(element.categories);
+          catTimeTotalsCats = element.categories;
+          catTimeTotalsCats.forEach(cat => {
+            if (catTimeTotals[cat]) {
+              let milliSeconds = parseFloat(catTimeTotals[cat], 10);
+              milliSeconds += utils.getTimeDifference(element.start.dateTime, element.end.dateTime);
+              catTimeTotals[cat] = milliSeconds;
+            } else {
+              catTimeTotals[cat] = utils.getTimeDifference(element.start.dateTime, element.end.dateTime)
+            }
+          });
+
         });
       }
-      parms.result = JSON.stringify([...new Set(retCategories)]);
-      console.log('/categories result:', parms.result);
+      parms.result = JSON.stringify(catTimeTotals);
+      console.log('/time result:', parms.result);
       res.status(200).send(parms.result);
     } catch (err) {
       utils.handleError(err, res);

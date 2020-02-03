@@ -12,6 +12,10 @@ function getStartDate(req) {
   return { start, end };
 }
 
+function getTimeDifference(start, end) {
+  return (Date.parse(end) - Date.parse(start));
+}
+
 function handleError(err, res) {
   let parms = {};
   parms.message = 'Error retrieving events';
@@ -37,3 +41,4 @@ function filterToCategory(result, category) {
 exports.getStartDate = getStartDate;
 exports.handleError = handleError;
 exports.filterToCategory = filterToCategory;
+exports.getTimeDifference = getTimeDifference;
