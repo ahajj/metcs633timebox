@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //app.use(express.static(path.join(__dirname, 'public')));
 app.use('/events', events);
 app.use('/categories', categories);
-app.use('/calendar', calendar);
+app.use('/calendars', calendar);
 app.use('/users', users);
 
 module.exports = app;
