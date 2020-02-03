@@ -15,7 +15,9 @@ function getStartDate(req) {
 function getTimeDifference(start, end) {
   return (Date.parse(end) - Date.parse(start));
 }
-
+function handleClientConnectionError(message, res) {
+  res.status(404).send(message);
+}
 function handleError(err, res) {
   let parms = {};
   parms.message = 'Error retrieving events';
@@ -23,6 +25,7 @@ function handleError(err, res) {
   parms.debug = JSON.stringify(err.body, null, 2);
   res.status(404).send({ parms });
 }
+
 
 function filterToCategory(result, category) {
   if (result && result.value && category) {
@@ -42,3 +45,4 @@ exports.getStartDate = getStartDate;
 exports.handleError = handleError;
 exports.filterToCategory = filterToCategory;
 exports.getTimeDifference = getTimeDifference;
+exports.handleClientConnectionError = handleClientConnectionError;

@@ -23,7 +23,7 @@ router.get('/', async function (req, res) {
       utils.handleError(err, res);
     }
   } else {
-    res.status(404).send('Graph client could not be established.');
+     utils.handleClientConnectionError('Graph client could not be established.', res);
   }
 });
 
@@ -46,7 +46,7 @@ router.get('/:calendarId', async function (req, res) {
       utils.handleError(err, res);
     }
   } else {
-    res.status(404).send('Graph client could not be established.');
+     utils.handleClientConnectionError('Graph client could not be established.', res);
   }
 });
 

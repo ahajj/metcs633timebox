@@ -19,7 +19,7 @@ router.get('/', async function (req, res) {
       utils.handleErrors(err, res);
     }
   } else {
-    res.status(404).send('Grapgh client could not be established.');
+    utils.handleClientConnectionError('Graph client could not be established.', res);
   }
 });
 //TODO check
@@ -38,7 +38,7 @@ router.get('/:name', async function (req, res) {
       utils.handleErrors(err, res);
     }
   } else {
-    res.status(404).send('Grapgh client could not be established.');
+    utils.handleClientConnectionError('Graph client could not be established.', res);
   }
 });
 
