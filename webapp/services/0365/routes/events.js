@@ -18,8 +18,7 @@ router.get('/', async function (req, res) {
   let apiUrl = '';
   if (req.query.userId) {
     if (req.query.calendarId) {
-      //TODO check on this call.
-      apiUrl = `/users/${req.query.userId}/calendar/${req.query.calendarId}/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
+      apiUrl = `/users/${req.query.userId}/calendars/${req.query.calendarId}/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
     }
     else {
       apiUrl = `/users/${req.query.userId}/calendar/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
