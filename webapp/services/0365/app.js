@@ -5,6 +5,8 @@ var bodyParser = require('body-parser');
 require('dotenv').config();
 
 var calendar = require('./routes/calendar');
+var events = require('./routes/events');
+var categories = require('./routes/categories');
 var users = require('./routes/users');
 
 var app = express();
@@ -13,7 +15,9 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 //app.use(express.static(path.join(__dirname, 'public')));
-app.use('/', calendar);
-app.use('/', users);
+app.use('/events', events);
+app.use('/categories', categories);
+app.use('/calendar', calendar);
+app.use('/users', users);
 
 module.exports = app;
