@@ -1,0 +1,29 @@
+{
+	"recreation": [
+		"painting", "art workshop", "sketching workshop", "drawing workshop", "reading", "newspaper", "book club", "camping", "cinema", "movies", "concert", "gig", "concerts", "gigs", "piano", "singing", "music", "choir", "flute", "violin", "orchestra", "oboe", "clarinet", "saxophone", "cornett", "trumpet", "contrabass", "cello", "trombone", "tuba", "music", "ensemble", "string quartett", "guitar", "classical", "choir", "massage", "backrub", "massages", "manicure", "pedicure", "manicures", "pedicures"
+	],
+	"sports": [
+		"badminton", "yoga", "basketball", "baseball","billiard", "bowling", "bicycle", "cycling", "bike", "bicycles", "bikes", "biking", "dance", "dancing", "dances", "golf", "hiking", "hike", "hikes", "kayaking", "ping pong", "table tennis", "ping-pong", "pingpong", "jog", "jogging", "running", "jogs", "runs", "sail", "sailing", "boat cruise", "sailboat", "skiing", "ski", "skis", "snowboarding", "snowshoeing", "snow shoe", "snow boarding", "soccer", "swim", "swimming", "swims", "tennis", "going for a walk", "walking", "sport"
+	],
+	"gym": [
+		"gym", "workout", "workouts"
+	],
+	"food": [
+		"bbq", "barbecue", "barbeque", "breakfast", "breakfasts", "brunch", "brunches", "coffee", "coffees", "dinner", "dinners", "restaurant", "restaurants", "family meal", "cocktail", "drinks", "cocktails", "lunch", "lunches", "luncheon"
+	],
+	"appointments": [
+		"mechaninc", "oil change", "car service", "dentist", "dentistry", "dental", "graduation", "haircut", "hair", "wedding", "repair", "handyman", "electrician", "plumber", "DIY"
+	],
+	"school": [
+		"class", "test", "quiz", "homework", "project"
+	],
+	"travel": [
+		"roadtrip", "drive", "commute", "flight", "fly", "airplane", "airport", "hotel", "motel", "resort", "stay"
+	],
+	"chores": [
+		"cleaning", "clean", "tidy", "vacuum"
+	],
+	"work": [
+		"deadline", "meeting", "office", "work"
+	]
+}
