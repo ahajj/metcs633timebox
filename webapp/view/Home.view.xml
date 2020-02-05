@@ -18,6 +18,12 @@
 					press="onSignInOutGooglePress"
 					class="sapUiTinyMarginEnd">
 				</Button>
+				<Button 
+					id="signButtonO365"
+					text="Sign into O365"
+					press="onSignInOutO365Press"
+					class="sapUiTinyMarginEnd">
+				</Button>
 			</HBox>
 			<Panel
 				id="calendarSelectionPanel"
