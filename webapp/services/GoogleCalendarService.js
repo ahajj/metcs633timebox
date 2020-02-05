@@ -199,11 +199,13 @@ sap.ui.define("com/metcs633/services/GoogleCalendarService", [
 		for (var k = 0; k < keys.length; k++) {
 			var key = keys[k];
 			// now check all keywords in the event name to see if there is a match
-			if (eventCategories[key].some(
-					v => (event.name.toLowerCase()).includes(v.toLowerCase())
-				)) {
+			if (eventCategories[key].some(function(keyword, index) {
+					event.keyword = (event.name.toLowerCase()).includes(keyword.toLowerCase()) ? keyword.toLowerCase() : "";
+					return (event.name.toLowerCase()).includes(keyword.toLowerCase());
+				}
+			)) {
 
-			   console.log("Found " + event.name + " paired with " + key);
+			   console.log("Found " + event.name + " paired with " + key + " because of keyword: " + event.keyword);
 				return key;
 			}
 		}
@@ -264,6 +266,8 @@ sap.ui.define("com/metcs633/services/GoogleCalendarService", [
 
 		    parsedEvent.name = event.summary;
 		    parsedEvent.description = description;
+		    parsedEvent.startTimeString = startTime;
+		    parsedEvent.endTimeString = endTime;
 		    parsedEvent.startTime = this.parseISOStringToDate(startTime);
 		    parsedEvent.endTime = this.parseISOStringToDate(endTime);
 
@@ -305,7 +309,13 @@ sap.ui.define("com/metcs633/services/GoogleCalendarService", [
         // Instantiate and draw our chart, passing in our HBox.
         var chart = new google.visualization.ColumnChart(HBoxDomRef);
         chart.draw(data, options);
-		controller.getView().byId("configLabel").setText("Analyzed time!  Scroll down to see a visual representation")
+		controller.getView().byId("configLabel").setText("Analyzed time!  Scroll down to see a visual representation");
+
+		// fill in the table
+		var listModel = new sap.ui.model.json.JSONModel();	
+		listModel.setData(parsedEvents);
+		controller.getView().byId("eventsTable").setModel(listModel);
+		controller.getView().byId("eventsTable").setVisible(true);
 	}
 
   return Utils;

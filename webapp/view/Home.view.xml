@@ -97,6 +97,61 @@
 					</items>
 				</FlexBox>
 			</Panel>
+			<Table
+				id="eventsTable"
+				inset="false"
+				visible="false"
+				items="{
+					path: '/',
+					sorter: [{
+						path: 'category'
+					}, 
+					{
+						path: 'name'
+					}, 
+					{
+						path: 'keyword'
+					}]
+				}">
+				<columns>
+					<Column
+						width="12em">
+						<Text text="Event" />
+					</Column>
+					<Column
+						demandPopin="true">
+						<Text text="Category" />
+					</Column>
+					<Column
+						demandPopin="true">
+						<Text text="Keyword" />
+					</Column>
+					<Column
+						demandPopin="true">
+						<Text text="Date" />
+					</Column>
+					<Column
+						demandPopin="true">
+						<Text text="Hours" />
+					</Column>
+				</columns>
+				<items>
+					<ColumnListItem>
+						<cells>
+							<Text
+								text="{name}"/>
+							<Text
+								text="{category}" />
+							<Text
+								text="{keyword}" />
+							<Text
+								text="{startTimeString}" />
+							<Text
+								text="{time}" />
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
 		</content>
 	</Page>
 </mvc:View>
