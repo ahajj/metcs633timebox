@@ -3,8 +3,9 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"../model/formatter",
-	'../services/GoogleCalendarService'
-], function(Controller, formatter, GoogleCalendarService) {
+	'../services/GoogleCalendarService',
+  '../services/GoogleChartService'
+], function(Controller, formatter, GoogleCalendarService, GoogleChartService) {
 	"use strict";
 
     var signedInGoogle = false;
@@ -79,40 +80,22 @@ sap.ui.define([
 
     	// then we need the end date date
     	var endTime =dtpEnd.getDateValue();
-
-    	GoogleCalendarService.getListOfEventsFromCalendarInDateRange(selectedCalendar, startTime, endTime, this);
+      var me = this;
+    	GoogleCalendarService.getListOfEventsFromCalendarInDateRange(selectedCalendar, startTime, endTime, function(response) {
+          var events = response.result.items;
+          console.log(events);
+          GoogleCalendarService.parseListOfEvents(events, me);
+        });
 
       this.getView().byId("changeChartType").setVisible(true);
 
     },
 
     changeChart:function(event) {
-        
-        // Create the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Event');
-        data.addColumn('number', 'Hours');
-        data.addRows(this.chartData);
-        // Set chart options
-        var options = {
-            'title': 'Hours per Category',
-            'width': 800,
-            'height': 800
-        };
-        var HBoxDomRef = this.getView().byId("barChartPanel").getDomRef();
-
-        var chart;
-        // Instantiate and draw our chart, passing in our HBox.
-        if (this.isColumnChart)
-        {
-          chart = new google.visualization.PieChart(HBoxDomRef);
-        }
-        else
-        {
-          chart = new google.visualization.ColumnChart(HBoxDomRef);
-        }
-        this.isColumnChart = !(this.isColumnChart);
-        chart.draw(data, options);
+        var me = this;
+        GoogleChartService.drawChart(this.chartData, this, function() {
+          me.isColumnChart = !(me.isColumnChart);
+        });
     },
 
     calendarSelectionChange:function(event) {

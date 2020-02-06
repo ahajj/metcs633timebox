@@ -2,7 +2,8 @@
 // Purpose: functions to get calendar info from google
 
 sap.ui.define("com/metcs633/services/GoogleCalendarService", [
-], function() {
+	'../services/GoogleChartService'
+], function(GoogleChartService) {
 	"use strict";
 
 	var Utils = {};
@@ -153,7 +154,7 @@ sap.ui.define("com/metcs633/services/GoogleCalendarService", [
 		console.log(listOfCalendars);
 	}
 
-	Utils.getListOfEventsFromCalendarInDateRange = function(calendar, startDate, endDate, controller) {
+	Utils.getListOfEventsFromCalendarInDateRange = function(calendar, startDate, endDate, callback) {
 
 		// the calendar key is what Gooogle Calendar API needs
 		var calendarKey = calendar.getKey();
@@ -170,11 +171,7 @@ sap.ui.define("com/metcs633/services/GoogleCalendarService", [
 	        'showDeleted': false,
 	        'singleEvents': true,
 	        'orderBy': 'startTime'
-        }).then(function(response) {
-	        var events = response.result.items;
-	        console.log(events);
-	        me.parseListOfEvents(events, controller);
-        });
+        }).then(callback);
 
 	},
 
@@ -251,6 +248,7 @@ sap.ui.define("com/metcs633/services/GoogleCalendarService", [
 		return listOfCategories;
 	},
 
+
 	Utils.parseListOfEvents = function(events, controller) {
 		var parsedEvents = [];
 
@@ -290,32 +288,20 @@ sap.ui.define("com/metcs633/services/GoogleCalendarService", [
         // add all the hours in a category
         var catData = this.collectHoursInCategories(parsedEvents);
 
-        // set the data back into the controller so it's retrievable after
+        // set the data back into the conteroller so it's retrievable after
         controller.chartData = catData;
-        controller.isColumnChart = true;
+        controller.parsedEvents = parsedEvents;
+        controller.isColumnChart = (controller.hasOwnProperty("isColumnChart")) ?  !(controller.isColumnChart) : true;
 
-        // Create the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Event');
-        data.addColumn('number', 'Hours');
-        data.addRows(catData);
-        // Set chart options
-        var options = {
-            'title': 'Hours per Category',
-            'width': 800,
-            'height': 800
-        };
-        var HBoxDomRef = controller.getView().byId("barChartPanel").getDomRef();
-        // Instantiate and draw our chart, passing in our HBox.
-        var chart = new google.visualization.ColumnChart(HBoxDomRef);
-        chart.draw(data, options);
-		controller.getView().byId("configLabel").setText("Analyzed time!  Scroll down to see a visual representation");
-
-		// fill in the table
-		var listModel = new sap.ui.model.json.JSONModel();	
-		listModel.setData(parsedEvents);
-		controller.getView().byId("eventsTable").setModel(listModel);
-		controller.getView().byId("eventsTable").setVisible(true);
+        GoogleChartService.drawChart(catData, controller, function() {
+        	// fill in the table
+			var listModel = new sap.ui.model.json.JSONModel();	
+			listModel.setData(parsedEvents);
+			controller.getView().byId("eventsTable").setModel(listModel);
+			controller.getView().byId("eventsTable").setVisible(true);
+			controller.getView().byId("configLabel").setText("Analyzed time!  Scroll down to see a visual representation");
+			controller.isColumnChart = !(controller.isColumnChart);
+        });
 	}
 
   return Utils;
