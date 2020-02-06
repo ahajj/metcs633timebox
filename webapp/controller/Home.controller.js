@@ -28,8 +28,7 @@ sap.ui.define([
 		onSignInOutGooglePress: function (event) {
 			if (signedInGoogle) {
 				GoogleCalendarService.signOut(this);
-			}
-			else {
+			} else {
 				GoogleCalendarService.signIn(this);
 			}
 			signedInGoogle = !signedInGoogle;
@@ -38,9 +37,8 @@ sap.ui.define([
 		onSignInOutO365Press: function (event) {
 
 			if (signedInO365) {
-				//O365CalendarService.signOut(this);
-			}
-			else {
+				O365CalendarService.signOut(this);
+			} else {
 				O365CalendarService.signIn(this);
 			}
 			signedInO365 = !signedInO365;
@@ -58,8 +56,7 @@ sap.ui.define([
 
 			if (calendarDropDown.getSelectedItem() && dtpStart.getValue() && dtpEnd.getValue()) {
 				this.getView().byId("goButton").setEnabled(true);
-			}
-			else {
+			} else {
 
 				this.getView().byId("goButton").setEnabled(false);
 			}

@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../webapp/server');
+var app = require('../server');
 var debug = require('debug')('time-box:server');
 var http = require('http');
 

@@ -1,66 +1,71 @@
 // Author: Andrew Hajj
 // Purpose: functions to get calendar info from google
-sap.ui.define("com/metcs633/services/O365CalendarService", [], function () {
-	//sap.ui.define("com/metcs633/services/O365CalendarService", ["../services/O365/helpers/bundle-helpers"], function (helper) {
-	"use strict";
+sap.ui.define([],
+	function () {
+		"use strict";
 
-	var Utils = {};
+		var Utils = {};
 
-	// Client ID from the Developer Console
-	var CLIENT_ID = '782211928709-49gkv11kmh5mji6m79rs9df57ba3u6pv.apps.googleusercontent.com';
+		const APP_ID = "f43b3bbb-f2aa-4134-9518-e0a190584c6f";
+		const APP_PASSWORD = "l42qTX74yi@xDfgeuG_TOxWrTXJMfx=/";
+		const APP_SCOPES = ['Calendars.Read', 'Calendars.ReadWrite'];
+		const MS_GRAPH_BASE = "https://graph.microsoft.com"
 
-	// Array of API discovery doc URLs for APIs used by the quickstart
-	var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+		const config = {
+			msalConfig: {
+				auth: {
+					clientId: APP_ID
+				},
+				cache: {
+					cacheLocation: 'localStorage',
+					storeAuthStateInCookie: true
+				}
+			},
+			graphBaseEndpoint: "https://graph.microsoft.com/v1.0/",
+			scopeConfig: {
+				scopes: APP_SCOPES
+			}
+		};
 
-	// Authorization scopes required by the API; multiple scopes can be
-	// included, separated by spaces.
-	var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+		Utils.signIn = function (event) {
+			var ret = this.initiateClient();
+			if (ret) {
+				var idToken = ret.idToken;
+				console.log('O365 token: ', ret.idToken)
+				event.getView().byId("signButtonO365").setText("Sign Out of O365");
+				event.getView().byId("configLabel").setText("Connected to O365!");
+			}
+		};
 
-	// Function to authenticate the user and choose the Google Account
-	Utils.signIn = function (event) {
-		console.log('DUDE', helper.getAuthUrlUserFlow());
+		Utils.signOut = function (event) {
+			var ret = this.initiateClient(true);
+			if (ret) {
+				event.getView().byId("signButtonO365").setText("Sign In to O365");
+				event.getView().byId("configLabel").setText("Signed Out of O365!");
+			}
+		};
 
-		gapi.auth2.getAuthInstance().signIn();
-		event.getView().byId("signButton").setText("Sign Out of O365");
-		event.getView().byId("configLabel").setText("Connected to O365!");
-		// get the list of calendars and pass in the combobox so it can filled
-		//this.getCalendars(event);
-	};
+		function handleAuthError(error) {
+			console.log(error);
+		}
 
-	// // Function to signout of Google
-	// Utils.signOut = function (event) {
-	// 	gapi.auth2.getAuthInstance().signOut();
-	// 	event.getView().byId("calendarComboBox").setEnabled(false);
-	// 	event.getView().byId("signButton").setText("Sign Into O365");
-	// 	event.getView().byId("configLabel").setText("Connected to O365! Now click Sign into O365");
-	// };
-
-	// // Function to connect to Google Calendars
-	// // This gets called on startup
-	// Utils.connectToO365 = function (label) {
-	// 	gapi.load('client:auth2', this.initiateClient(label));
-
-	// };
-
-	// // Initiate the client.
-	// // This gives the client access to Google Calendar
-	// // The scope is only set to read 
-	// Utils.initiateClient = function (label) {
-
-	// 	var me = this;
-
-	// 	gapi.client.init({
-	// 		clientId: CLIENT_ID,
-	// 		discoveryDocs: DISCOVERY_DOCS,
-	// 		scope: SCOPES
-	// 	}).then(function () {
-	// 		// Listen for sign-in state changes.
-	// 		gapi.auth2.getAuthInstance().isSignedIn.listen(label.setText("Connected to O365! Now click Sign In."));
+		Utils.initiateClient = (signout = false) => {
+			this.oMsalClient = new Msal.UserAgentApplication(config.msalConfig);
+			if (signout) {
+				this.oMsalClient.logout();
+				return true;
+			}
+			//check if the user is already signed in
+			if (!this.oMsalClient.getAccount()) {
+				this.oMsalClient.loginPopup(config.scopeConfig).then((res) => {
+					return res.idToken;
+				}).catch((error) => {
+					handleAuthError(error);
+				});;
+			}
+			return this.oMsalClient.getAccount();
+		};
 
 
-	// 	}, function (error) {
-	// 		console.log(JSON.stringify(error, null, 2));
-	// 	});
-	// };
-	return Utils;
-}, true /* bExport */);
+		return Utils;
+	}, true /* bExport */);

@@ -41,6 +41,15 @@ function filterToCategory(result, category) {
   }
 }
 
+
+var O365Utils = window.O365Utils || {}
+O365Utils.getStartDate = getStartDate;
+O365Utils.handleError = handleError;
+O365Utils.filterToCategory = filterToCategory;
+O365Utils.getTimeDifference = getTimeDifference;
+O365Utils.handleClientConnectionError = handleClientConnectionError;
+window.O365Utils = O365Utils;
+
 exports.getStartDate = getStartDate;
 exports.handleError = handleError;
 exports.filterToCategory = filterToCategory;
