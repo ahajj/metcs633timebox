@@ -38,6 +38,11 @@
   "devDependencies": {
     "@ui5/cli": "^1.0.0",
     "eslint": "^4.19.1",
+    "gulp": "^4.0.2",
+    "gulp-if": "^3.0.0",
+    "gulp-pretty-data": "^0.1.2",
+    "gulp-uglify": "^3.0.2",
+    "gulp-ui5-preload": "^1.3.1",
     "karma": "^4.0.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.2",
