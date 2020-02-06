@@ -14,11 +14,11 @@
     "build": "rimraf dist && ui5 build --a"
   },
   "dependencies": {
+    "@microsoft/microsoft-graph-client": "^1.0.0",
     "@openui5/sap.m": "^1.52.5",
     "@openui5/sap.ui.core": "^1.52.5",
     "@openui5/sap.ui.layout": "^1.52.5",
     "@openui5/themelib_sap_belize": "^1.52.5",
-    "@microsoft/microsoft-graph-client": "^1.0.0",
     "axios": "^0.19.2",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
@@ -30,6 +30,7 @@
     "lodash": "^4.17.15",
     "morgan": "~1.9.0",
     "msal": "^1.2.1",
+    "npm": "^6.13.7",
     "qs": "^6.9.1",
     "serve-favicon": "~2.4.5",
     "simple-oauth2": "^3.0.0"

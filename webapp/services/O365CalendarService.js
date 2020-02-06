@@ -1,36 +1,31 @@
 // Author: Andrew Hajj
 // Purpose: functions to get calendar info from google
 sap.ui.define("com/metcs633/services/O365CalendarService", [], function () {
+	//sap.ui.define("com/metcs633/services/O365CalendarService", ["../services/O365/helpers/bundle-helpers"], function (helper) {
 	"use strict";
 
 	var Utils = {};
 
-	// // Client ID from the Developer Console
-	// var CLIENT_ID = '782211928709-49gkv11kmh5mji6m79rs9df57ba3u6pv.apps.googleusercontent.com';
+	// Client ID from the Developer Console
+	var CLIENT_ID = '782211928709-49gkv11kmh5mji6m79rs9df57ba3u6pv.apps.googleusercontent.com';
 
-	// // Array of API discovery doc URLs for APIs used by the quickstart
-	// var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+	// Array of API discovery doc URLs for APIs used by the quickstart
+	var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 
-	// // Authorization scopes required by the API; multiple scopes can be
-	// // included, separated by spaces.
-	// var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+	// Authorization scopes required by the API; multiple scopes can be
+	// included, separated by spaces.
+	var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
-	// // Function to authenticate the user and choose the Google Account
-	// Utils.signIn = function (event) {
-	// 	console.log('DUDE',authHelper.getAuthUrlUserAccess());
-	// 	new sap.m.Button({
-	// 		text:"{w/buttonText}",
-	// 		type:"{w/buttonType}",
-	// 		enabled:"{w/buttonEnabled}",
-	// 		press: [w.buttonCallback, w]
-	// }),
+	// Function to authenticate the user and choose the Google Account
+	Utils.signIn = function (event) {
+		console.log('DUDE', helper.getAuthUrlUserFlow());
 
-	// 	gapi.auth2.getAuthInstance().signIn();
-	// 	event.getView().byId("signButton").setText("Sign Out of O365");
-	// 	event.getView().byId("configLabel").setText("Connected to O365!");
-	// 	// get the list of calendars and pass in the combobox so it can filled
-	// 	//this.getCalendars(event);
-	// };
+		gapi.auth2.getAuthInstance().signIn();
+		event.getView().byId("signButton").setText("Sign Out of O365");
+		event.getView().byId("configLabel").setText("Connected to O365!");
+		// get the list of calendars and pass in the combobox so it can filled
+		//this.getCalendars(event);
+	};
 
 	// // Function to signout of Google
 	// Utils.signOut = function (event) {
@@ -66,6 +61,6 @@ sap.ui.define("com/metcs633/services/O365CalendarService", [], function () {
 	// 	}, function (error) {
 	// 		console.log(JSON.stringify(error, null, 2));
 	// 	});
-	//};
+	// };
 	return Utils;
 }, true /* bExport */);

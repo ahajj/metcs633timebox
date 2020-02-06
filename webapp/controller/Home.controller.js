@@ -9,6 +9,8 @@ sap.ui.define([
 	"use strict";
 
 	var signedInGoogle = false;
+	var signedInO365 = false;
+
 
 	return Controller.extend("com.metcs633.controller.App", {
 
@@ -34,13 +36,14 @@ sap.ui.define([
 		},
 
 		onSignInOutO365Press: function (event) {
-			if (signedInGoogle) {
-				GoogleCalendarService.signOut(this);
+
+			if (signedInO365) {
+				//O365CalendarService.signOut(this);
 			}
 			else {
-				GoogleCalendarService.signIn(this);
+				O365CalendarService.signIn(this);
 			}
-			signedInGoogle = !signedInGoogle;
+			signedInO365 = !signedInO365;
 		},
 		onGetCalendarsPress: function (event) {
 

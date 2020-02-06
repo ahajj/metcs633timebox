@@ -2,22 +2,35 @@ const axios = require('axios'); //Make http calls
 const qs = require('qs'); //Make json
 const graph = require('@microsoft/microsoft-graph-client');
 
+// const credentials = {
+//   client: {
+//     id: process.env.APP_ID,
+//     secret: process.env.APP_PASSWORD,
+//   },
+//   auth: {
+//     tokenHost: 'https://login.microsoftonline.com/',
+//     authorizePath: 'common/oauth2/v2.0/authorize',
+//     tokenPath: 'common/oauth2/v2.0/token',
+//     tokenPathWithTenant: `${process.env.MS_TENANT}/oauth2/v2.0/token`,
+//   },
+// };
+
 const credentials = {
   client: {
     id: process.env.APP_ID,
     secret: process.env.APP_PASSWORD,
   },
   auth: {
-    tokenHost: 'https://login.microsoftonline.com/',
+    tokenHost: 'https://login.microsoftonline.com',
     authorizePath: 'common/oauth2/v2.0/authorize',
-    tokenPath: `${process.env.MS_TENANT}/oauth2/v2.0/token`,
-    tokenPathNonTenant: 'common/oauth2/v2.0/token'
-  },
+    tokenPath: 'common/oauth2/v2.0/token'
+  }
 };
 
+
 //#region Tenant Access
-async function getAccessToken() {
-  const url = `${credentials.auth.tokenHost}${credentials.auth.tokenPath}`
+async function getAccessTokenTenantFlow() {
+  const url = `${credentials.auth.tokenHost}${process.env.MS_TENANT}/oauth2/v2.0/token`
   const postData = {
     client_id: process.env.APP_ID,
     scope: process.env.MS_GRAPH_SCOPE,
@@ -41,7 +54,7 @@ async function getAccessToken() {
 }
 
 async function getGraphClient() {
-  const accessToken = await getAccessToken();//Get Bearer access token to call Graph API
+  const accessToken = await getAccessTokenTenantFlow();//Get Bearer access token to call Graph API
   if (accessToken) {
     // Initialize Graph client
     const client = graph.Client.init({
@@ -59,7 +72,7 @@ async function getGraphClient() {
 const oauth2 = require('simple-oauth2').create(credentials);
 const jwt = require('jsonwebtoken');
 
-function getAuthUrlUserAccess() {
+function getAuthUrlUserFlow() {
   const returnVal = oauth2.authorizationCode.authorizeURL({
     redirect_uri: process.env.REDIRECT_URI,
     scope: process.env.APP_SCOPES
@@ -68,7 +81,7 @@ function getAuthUrlUserAccess() {
   return returnVal;
 }
 
-async function getTokenFromCodeUserAccess(auth_code, res) {
+async function getTokenFromCodeUserFlow(auth_code, res) {
   let result = await oauth2.authorizationCode.getToken({
     code: auth_code,
     redirect_uri: process.env.REDIRECT_URI,
@@ -83,7 +96,7 @@ async function getTokenFromCodeUserAccess(auth_code, res) {
   return token.token.access_token;
 }
 
-async function getAccessTokenUserAccess(cookies, res) {
+async function getAccessTokenUserFlow(cookies, res) {
   // Do we have an access token cached?
   let token = cookies.graph_access_token;
 
@@ -111,7 +124,7 @@ async function getAccessTokenUserAccess(cookies, res) {
   return null;
 }
 
-function saveValuesToCookieUserAccess(token, res) {
+function saveValuesToCookieUserFlow(token, res) {
   // Parse the identity token
   const user = jwt.decode(token.token.id_token);
 
@@ -125,7 +138,7 @@ function saveValuesToCookieUserAccess(token, res) {
   res.cookie('graph_token_expires', token.token.expires_at.getTime(), { maxAge: 3600000, httpOnly: true });
 }
 
-function clearCookies(res) {
+function clearCookiesUserFlow(res) {
   // Clear cookies
   res.clearCookie('graph_access_token', { maxAge: 3600000, httpOnly: true });
   res.clearCookie('graph_user_name', { maxAge: 3600000, httpOnly: true });
@@ -135,10 +148,11 @@ function clearCookies(res) {
 //#endregion
 
 
-exports.getAccessToken = getAccessToken;
+exports.getAccessTokenTenantFlow = getAccessTokenTenantFlow;
 exports.getGraphClient = getGraphClient;
 
-exports.getAuthUrlUserAccess = getAuthUrlUserAccess;
-exports.getAccessTokenUserAccess = getAccessTokenUserAccess;
-exports.getTokenFromCodeUserAccess = getTokenFromCodeUserAccess;
-exports.clearCookiesUserAccess = clearCookiesUserAccess;
+exports.getAuthUrlUserFlow = getAuthUrlUserFlow;
+exports.getAccessTokenUserFlow = getAccessTokenUserFlow;
+exports.getTokenFromCodeUserFlow = getTokenFromCodeUserFlow;
+exports.clearCookiesUserFlow = clearCookiesUserFlow;
+exports.saveValuesToCookieUserFlow = saveValuesToCookieUserFlow;

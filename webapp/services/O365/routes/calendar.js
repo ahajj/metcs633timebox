@@ -51,7 +51,7 @@ router.get('/:calendarId', async function (req, res) {
 });
 
 router.get('/me', async function (req, res) {
-  const accessToken = await authHelper.getAccessTokenUserAccess(req.cookies, res);
+  const accessToken = await authHelper.getAccessTokenUserFlow(req.cookies, res);
   const userName = req.cookies.graph_user_name;
 
   if (accessToken && userName) {

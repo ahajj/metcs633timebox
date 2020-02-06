@@ -11,7 +11,7 @@ router.get('/', async function(req, res, next) {
   // If code is present, use it
   if (code) {
     try {
-      await authHelper.getTokenFromCodeUserAccess(code, res);
+      await authHelper.getTokenFromCodeUserFlow(code, res);
       // Redirect to home
       res.redirect('/');
     } catch (error) {
