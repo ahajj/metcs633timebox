@@ -64,6 +64,7 @@ sap.ui.define([],
 				event.getView().byId("configLabel").setText("Connected to O365!");
 				this.getCalendars();
 				this.getCategories();
+				this.getCategoriesTime();
 			}
 		};
 
@@ -124,6 +125,11 @@ sap.ui.define([],
 			return { start, end };
 		}
 
+
+		function getTimeDifference(start, end) {
+			return (Date.parse(end) - Date.parse(start));
+		}
+
 		Utils.getCategories = function (startDate, endDate, calendarId = '') {
 			let start, end = new Date();
 
@@ -134,7 +140,7 @@ sap.ui.define([],
 
 			console.log('start date:', start);
 			console.log('end date:', end);
-			
+
 			var apiUrl = '';
 			if (calendarId && calendarId.length > 0) {
 				apiUrl = `/me/calendars/${calendarId}/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
@@ -159,6 +165,58 @@ sap.ui.define([],
 					}
 					categories = JSON.stringify([...new Set(retCategories)]);
 					console.log('getCategories result:', categories);
+
+				}).fail((error) => {
+					handleAuthError(error);
+				});
+			});
+		}
+
+		Utils.getCategoriesTime = function (startDate, endDate, calendarId = '') {
+			let start, end = new Date();
+
+			//start and end date format 2020-01-31
+			let dates = getStartDate(startDate, endDate);
+			start = dates.start;
+			end = dates.end;
+
+			console.log('start date:', start);
+			console.log('end date:', end);
+
+			var apiUrl = '';
+			if (calendarId && calendarId.length > 0) {
+				apiUrl = `/me/calendars/${calendarId}/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
+			} else {
+				apiUrl = `/me/calendar/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
+			}
+			getMSGraphClient().acquireTokenSilent(config.scopeConfig).then((token) => {
+				$.ajax({
+					headers: {
+						"Authorization": "Bearer " + token.accessToken
+					},
+					url: `${config.graphBaseEndpoint}${apiUrl}`,
+					type: "GET"
+				}).then((res) => {
+					console.log(`getCategoriesTime`, res);
+
+					let catTimeTotals = {};
+					if (res && res.value) {
+						res.value.forEach(element => {
+							var catTimeTotalsCats = element.categories;
+							catTimeTotalsCats.forEach(cat => {
+								if (catTimeTotals[cat]) {
+									let milliSeconds = parseFloat(catTimeTotals[cat], 10);
+									milliSeconds += getTimeDifference(element.start.dateTime, element.end.dateTime);
+									catTimeTotals[cat] = milliSeconds;
+								} else {
+									catTimeTotals[cat] = getTimeDifference(element.start.dateTime, element.end.dateTime)
+								}
+							});
+
+						});
+					}
+					res = JSON.stringify(catTimeTotals);
+					console.log('getCategoriesTime:', res);
 
 				}).fail((error) => {
 					handleAuthError(error);
