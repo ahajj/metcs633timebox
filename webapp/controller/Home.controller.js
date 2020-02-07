@@ -88,11 +88,10 @@ sap.ui.define([
 
 			// then we need the end date date
 			var endTime = dtpEnd.getDateValue();
-			var me = this;
 			GoogleCalendarService.getListOfEventsFromCalendarInDateRange(selectedCalendar, startTime, endTime, function (response) {
 				var events = response.result.items;
 				console.log(events);
-				GoogleCalendarService.parseListOfEvents(events, me);
+				GoogleCalendarService.parseListOfEvents(events, this);
 			});
 
 			this.getView().byId("changeChartType").setVisible(true);
@@ -100,9 +99,8 @@ sap.ui.define([
 		},
 
 		changeChart: function (event) {
-			var me = this;
 			GoogleChartService.drawChart(this.chartData, this, function () {
-				me.isColumnChart = !(me.isColumnChart);
+				me.isColumnChart = !(this.isColumnChart);
 			});
 		},
 
