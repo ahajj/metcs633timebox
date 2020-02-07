@@ -3,6 +3,7 @@
 	displayBlock="true"
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:l="sap.ui.layout"		
 	xmlns:core="sap.ui.core">
 	<Page
 		id="page"
@@ -15,6 +16,9 @@
 				<Button 
 					id="signButton"
 					text="Sign into Google"
+					enabled="false"
+					busyIndicatorDelay="0"
+					busy="true"
 					press="onSignInOutGooglePress"
 					class="sapUiTinyMarginEnd">
 				</Button>
@@ -45,20 +49,26 @@
 						selectionChange="calendarSelectionChange">
 						<core:Item key="{id}" text="{name}" />
 					</ComboBox>
-					<Label text="Choose a start date: " labelFor="DTP1"/>
-					<DateTimePicker
-						id="DTP1"
-						placeholder="Enter Date ..."
-						change="handleStartDateChange"
-						required="true"
-						class="sapUiSmallMarginBottom"/>
-					<Label text="Choose an end date: " labelFor="DTP2"/>
-					<DateTimePicker
-						id="DTP2"
-						placeholder="Enter Date ..."
-						required="true"
-						change="handleEndDateChange"
-						class="sapUiSmallMarginBottom"/>
+					<HBox>	
+						<VBox class = "sapUiSmallMarginEnd">
+							<Label text="Choose a start date: " labelFor="DTP1"/>
+							<DatePicker
+								id="DTP1"
+								placeholder="Enter Date ..."
+								change="handleStartDateChange"
+								required="true"
+								class="sapUiSmallMarginBottom"/>
+						</VBox>		
+						<VBox>
+							<Label text="Choose an end date: " labelFor="DTP2"/>
+							<DatePicker
+								id="DTP2"
+								placeholder="Enter Date ..."
+								required="true"
+								change="handleEndDateChange"
+								class="sapUiSmallMarginBottom"/>
+						</VBox>
+					</HBox>
 					<Button
 						id="goButton"
 						text="Go!"
@@ -76,10 +86,78 @@
 				class="sapUiSmallMarginTop"
 				text="Not connected to Google...">
 			</Label>
-			<Panel
-				id="barChartPanel">
-
+			<Panel>
+				<Button
+					id="changeChartType"
+					text="Change Chart"
+					press="changeChart"
+					visible="false">
+				</Button>
+				<FlexBox
+					alignItems="Center"
+					justifyContent="Center">
+					<items>
+						<Panel
+							id="barChartPanel">
+						</Panel>
+					</items>
+				</FlexBox>
 			</Panel>
+			<Table
+				id="eventsTable"
+				inset="false"
+				visible="false"
+				items="{
+					path: '/',
+					sorter: [{
+						path: 'category'
+					}, 
+					{
+						path: 'name'
+					}, 
+					{
+						path: 'keyword'
+					}]
+				}">
+				<columns>
+					<Column
+						width="12em">
+						<Text text="Event" />
+					</Column>
+					<Column
+						demandPopin="true">
+						<Text text="Category" />
+					</Column>
+					<Column
+						demandPopin="true">
+						<Text text="Keyword" />
+					</Column>
+					<Column
+						demandPopin="true">
+						<Text text="Date" />
+					</Column>
+					<Column
+						demandPopin="true">
+						<Text text="Hours" />
+					</Column>
+				</columns>
+				<items>
+					<ColumnListItem>
+						<cells>
+							<Text
+								text="{name}"/>
+							<Text
+								text="{category}" />
+							<Text
+								text="{keyword}" />
+							<Text
+								text="{startTimeString}" />
+							<Text
+								text="{time}" />
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
 		</content>
 	</Page>
 </mvc:View>
