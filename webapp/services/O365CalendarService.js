@@ -47,24 +47,20 @@ sap.ui.define([],
 			//check if the user is already signed in
 			if (!oMsalClient.getAccount()) {
 				oMsalClient.loginPopup(config.scopeConfig).then((res) => {
-					return res.idToken;
+					return res;
 				}).catch((error) => {
 					handleAuthError(error);
 				});
 			}
-			return oMsalClient.getAccount();
+			//return oMsalClient.getAccount();
 		};
 
 		Utils.signIn = function (event) {
 			var ret = this.initiateClient();
 			if (ret) {
-				var idToken = ret.idToken;
-				console.log('O365 token: ', ret.idToken)
 				event.getView().byId("signButtonO365").setText("Sign Out of O365");
 				event.getView().byId("configLabel").setText("Connected to O365!");
-				this.getCalendars();
-				this.getCategories();
-				this.getCategoriesTime();
+				this.getEvents();
 			}
 		};
 
@@ -87,6 +83,7 @@ sap.ui.define([],
 					type: "GET"
 				}).then((res) => {
 					console.log(`getCalendars`, res);
+					return res;
 				}).fail((error) => {
 					handleAuthError(error);
 				});
@@ -103,6 +100,7 @@ sap.ui.define([],
 					type: "GET"
 				}).then((res) => {
 					console.log(`getCalendars`, res);
+					return res;
 				}).fail((error) => {
 					handleAuthError(error);
 				});
@@ -165,6 +163,7 @@ sap.ui.define([],
 					}
 					categories = JSON.stringify([...new Set(retCategories)]);
 					console.log('getCategories result:', categories);
+					return categories;
 
 				}).fail((error) => {
 					handleAuthError(error);
@@ -217,6 +216,7 @@ sap.ui.define([],
 					}
 					res = JSON.stringify(catTimeTotals);
 					console.log('getCategoriesTime:', res);
+					return res;
 
 				}).fail((error) => {
 					handleAuthError(error);
@@ -225,8 +225,44 @@ sap.ui.define([],
 		}
 		//#endregion
 
-		Utils.getListOfEventsFromCalendarInDateRange = function (calendar, startDate, endDate, controller) {
+		//#region Events
+		Utils.getEvents = function (startDate, endDate, calendarId = '', filterToCategory = '') {
+			let start, end = new Date();
+
+			//start and end date format 2020-01-31
+			let dates = getStartDate(startDate, endDate);
+			start = dates.start;
+			end = dates.end;
+
+			console.log('start date:', start);
+			console.log('end date:', end);
+
+			var apiUrl = '';
+			if (calendarId && calendarId.length > 0) {
+				apiUrl = `/me/calendars/${calendarId}/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
+			} else {
+				apiUrl = `/me/calendar/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
+			}
+			getMSGraphClient().acquireTokenSilent(config.scopeConfig).then((token) => {
+				$.ajax({
+					headers: {
+						"Authorization": "Bearer " + token.accessToken
+					},
+					url: `${config.graphBaseEndpoint}${apiUrl}`,
+					type: "GET"
+				}).then((res) => {
+					if (filterToCategory && filterToCategory.length > 0) {
+						res.value = filterToCategory(res, filterToCategory)
+					}
+					console.log(`getEvents`, res);
+					return res;
+
+				}).fail((error) => {
+					handleAuthError(error);
+				});
+			});
 		}
+		//#endregion
 
 		return Utils;
 	}, true /* bExport */);
