@@ -21,7 +21,7 @@ sap.ui.define([
 		// Connect to Google api by default to grab the calendar
 		onInit: function () {
 			var configLabel = this.getView().byId("configLabel");
-			configLabel.setText("Connecting to Google...");
+			//configLabel.setText("Connecting to Google...");
 			GoogleCalendarService.connectToGoogle(this);
 		},
 

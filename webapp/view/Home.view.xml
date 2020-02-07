@@ -13,7 +13,7 @@
 			<Text class="sapUiSmallMarginTopBottom" text="Welcome to the Timebox Tool!  The first step is to sign in to Google, then choose the calendar you would like to analyze!">
 			</Text>
 			<HBox>
-				<Button 
+				<!-- <Button 
 					id="signButton"
 					text="Sign into Google"
 					enabled="false"
@@ -21,7 +21,7 @@
 					busy="true"
 					press="onSignInOutGooglePress"
 					class="sapUiTinyMarginEnd">
-				</Button>
+				</Button> -->
 				<Button 
 					id="signButtonO365"
 					text="Sign into O365"

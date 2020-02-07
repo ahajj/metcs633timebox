@@ -36,37 +36,41 @@ sap.ui.define([],
 			return oMsalClient;
 		}
 		//#endregion
-		Utils.initiateClient = function (signout) {
+		Utils.initiateClient = function (event, signout) {
 			var oMsalClient = getMSGraphClient();
 			if (signout) {
 				oMsalClient.logout();
+				event.getView().byId('signButtonO365').setText('Sign In to O365');
+				event.getView().byId('configLabel').setText('Signed Out of O365!');
 				return true;
 			}
 			//check if the user is already signed in
 			if (!oMsalClient.getAccount()) {
 				oMsalClient.loginPopup(config.scopeConfig).then(function (res) {
+					event.getView().byId('signButtonO365').setText('Sign Out of O365');
+					event.getView().byId('configLabel').setText('Connected to O365!');
 					return res;
 				}).catch(function (error) {
 					handleAuthError(error);
 				});
 			}
-			//return oMsalClient.getAccount();
+			return true;
 		};
 
 		Utils.signIn = function (event) {
-			var ret = this.initiateClient();
-			if (ret) {
-				event.getView().byId('signButtonO365').setText('Sign Out of O365');
-				event.getView().byId('configLabel').setText('Connected to O365!');
-			}
+			var ret = this.initiateClient(event);
+			// if (ret) {
+			// 	event.getView().byId('signButtonO365').setText('Sign Out of O365');
+			// 	event.getView().byId('configLabel').setText('Connected to O365!');
+			// }
 		};
 
 		Utils.signOut = function (event) {
-			var ret = this.initiateClient(true);
-			if (ret) {
-				event.getView().byId('signButtonO365').setText('Sign In to O365');
-				event.getView().byId('configLabel').setText('Signed Out of O365!');
-			}
+			var ret = this.initiateClient(event, true);
+			// if (ret) {
+			// 	event.getView().byId('signButtonO365').setText('Sign In to O365');
+			// 	event.getView().byId('configLabel').setText('Signed Out of O365!');
+			// }
 		};
 
 		//#region Calendars

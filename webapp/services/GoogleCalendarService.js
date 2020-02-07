@@ -75,7 +75,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 	// Function to connect to Google Calendars
 	// This gets called on startup
 	Utils.connectToGoogle = function (callback) {
-		gapi.load('client:auth2', this.initiateClient(callback));
+		//gapi.load('client:auth2', this.initiateClient(callback));
 
 	};
 
