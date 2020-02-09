@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../webapp/services/0365/app');
+var app = require('../server');
 var debug = require('debug')('time-box:server');
 var http = require('http');
 
@@ -20,7 +20,7 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-var server2 = http.createServer(app);
+
 
 /**
  * Listen on provided port, on all network interfaces.
