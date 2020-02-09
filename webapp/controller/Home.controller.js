@@ -4,8 +4,9 @@ sap.ui.define([
 	'sap/ui/core/mvc/Controller',
 	'../model/formatter',
 	'../services/GoogleCalendarService',
-	'../services/GoogleChartService'
-], function (Controller, formatter, GoogleCalendarService, GoogleChartService) {
+	'../services/GoogleChartService',
+	'../services/O365CalendarService'
+], function (Controller, formatter, GoogleCalendarService, GoogleChartService, O365CalendarService) {
 	'use strict';
 
 	var signedInGoogle = false;
