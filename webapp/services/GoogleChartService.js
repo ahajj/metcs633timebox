@@ -30,11 +30,12 @@ sap.ui.define('com/metcs633/services/GoogleChartService', [
 		};
 		var HBoxDomRef = controller.getView().byId('barChartPanel').getDomRef();
 		// Instantiate and draw our chart, passing in our HBox.
+		var chart = {};
 		if (controller.isColumnChart) {
-			var chart = new google.visualization.ColumnChart(HBoxDomRef);
+			chart = new google.visualization.ColumnChart(HBoxDomRef);
 		} else {
 
-			var chart = new google.visualization.PieChart(HBoxDomRef);
+			chart = new google.visualization.PieChart(HBoxDomRef);
 		}
 		google.visualization.events.addListener(chart, 'ready', function () {
 			google.visualization.events.addListener(chart, 'select', function () {

@@ -161,7 +161,6 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 		var startDateString = startDate.toISOString();
 		var endDateString = endDate.toISOString();
 
-		var me = this;
 
 		// get the list of events in the calendar
 		gapi.client.calendar.events.list({
@@ -194,7 +193,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 			for (var k = 0; k < keys.length; k++) {
 				var key = keys[k];
 				// now check all keywords in the event name to see if there is a match
-				if (eventCategories[key].some(function (keyword, index) {
+				if (eventCategories[key].some(function (keyword) {
 					event.keyword = (event.name.toLowerCase()).includes(keyword.toLowerCase()) ? keyword.toLowerCase() : '';
 					return (event.name.toLowerCase()).includes(keyword.toLowerCase());
 				}
