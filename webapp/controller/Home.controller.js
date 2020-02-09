@@ -1,118 +1,114 @@
 //Authors: Andrew Hajj
 
 sap.ui.define([
-	"sap/ui/core/mvc/Controller",
-	"../model/formatter",
+	'sap/ui/core/mvc/Controller',
+	'../model/formatter',
 	'../services/GoogleCalendarService',
-  '../services/GoogleChartService'
-], function(Controller, formatter, GoogleCalendarService, GoogleChartService) {
-	"use strict";
+	'../services/GoogleChartService'
+], function (Controller, formatter, GoogleCalendarService, GoogleChartService) {
+	'use strict';
 
-    var signedInGoogle = false;
-
-
-	return Controller.extend("com.metcs633.controller.App", {
-
-	formatter: formatter,
-	GoogleCalendarService: GoogleCalendarService,
-
-	// Connect to Google api by default to grab the calendar
-	onInit: function () {
-		var configLabel = this.getView().byId("configLabel");
-		configLabel.setText("Connecting to Google...");
-		GoogleCalendarService.connectToGoogle(this);
-	},
-
-  afterLogin:function() {
-    this.getView().byId("signButton").setEnabled(true);
-    this.getView().byId("configLabel").setText("Connected to Google! Now click Sign In.");
-  },
+	var signedInGoogle = false;
 
 
-    onSignInOutGooglePress:function(event) {
-  		if(signedInGoogle)
-  		{
-  			GoogleCalendarService.signOut(this);
-  		}
-  		else{
-  			GoogleCalendarService.signIn(this);
-  		}
-  		signedInGoogle = !signedInGoogle;
-    },
+	return Controller.extend('com.metcs633.controller.App', {
 
-    onGetCalendarsPress:function(event) {
- 
-    },
+		formatter: formatter,
+		GoogleCalendarService: GoogleCalendarService,
 
-    validateCalendarStartEndDate:function(event) {
-    	// only enable the Go button if
-    	// A calendar is selected, a start date and an end date are selected
-    	var calendarDropDown = this.getView().byId("calendarComboBox");
-    	var dtpStart = this.getView().byId("DTP1");
-    	var dtpEnd = this.getView().byId("DTP2");
+		// Connect to Google api by default to grab the calendar
+		onInit: function () {
+			var configLabel = this.getView().byId('configLabel');
+			configLabel.setText('Connecting to Google...');
+			GoogleCalendarService.connectToGoogle(this);
+		},
 
-    	if (calendarDropDown.getSelectedItem() && dtpStart.getValue() && dtpEnd.getValue())
-    	{
-    		this.getView().byId("goButton").setEnabled(true);
-    	}
-    	else{
+		afterLogin: function () {
+			this.getView().byId('signButton').setEnabled(true);
+			this.getView().byId('configLabel').setText('Connected to Google! Now click Sign In.');
+		},
 
-    		this.getView().byId("goButton").setEnabled(false);
-    	}
 
-    },
+		onSignInOutGooglePress: function (event) {
+			if (signedInGoogle) {
+				GoogleCalendarService.signOut(this);
+			} else {
+				GoogleCalendarService.signIn(this);
+			}
+			signedInGoogle = !signedInGoogle;
+		},
 
-    goButton:function(event){
-      // freeze the view so the user knows something is happening
-     // sap.ui.core.
+		onGetCalendarsPress: function (event) {
 
-    	// figure out the min and max time in order to query google calendar
-    	// this button doesn't get enabled until there is data in all 3 prompts (calendar, start & end date)
-    	var calendarDropDown = this.getView().byId("calendarComboBox");
-    	var dtpStart = this.getView().byId("DTP1");
-    	var dtpEnd = this.getView().byId("DTP2");
+		},
 
-    	// First, we need the selected calendar
-    	var selectedCalendar = calendarDropDown.getSelectedItem();
+		validateCalendarStartEndDate: function (event) {
+			// only enable the Go button if
+			// A calendar is selected, a start date and an end date are selected
+			var calendarDropDown = this.getView().byId('calendarComboBox');
+			var dtpStart = this.getView().byId('DTP1');
+			var dtpEnd = this.getView().byId('DTP2');
 
-    	// then we need the start date time
-    	var startTime = dtpStart.getDateValue();
+			if (calendarDropDown.getSelectedItem() && dtpStart.getValue() && dtpEnd.getValue()) {
+				this.getView().byId('goButton').setEnabled(true);
+			} else {
 
-    	// then we need the end date date
-    	var endTime =dtpEnd.getDateValue();
-      var me = this;
-    	GoogleCalendarService.getListOfEventsFromCalendarInDateRange(selectedCalendar, startTime, endTime, function(response) {
-          var events = response.result.items;
-          console.log(events);
-          GoogleCalendarService.parseListOfEvents(events, me);
-        });
+				this.getView().byId('goButton').setEnabled(false);
+			}
 
-      this.getView().byId("changeChartType").setVisible(true);
+		},
 
-    },
+		goButton: function (event) {
+			// freeze the view so the user knows something is happening
+			// sap.ui.core.
 
-    changeChart:function(event) {
-        var me = this;
-        GoogleChartService.drawChart(this.chartData, this, function() {
-          me.isColumnChart = !(me.isColumnChart);
-        });
-    },
+			// figure out the min and max time in order to query google calendar
+			// this button doesn't get enabled until there is data in all 3 prompts (calendar, start & end date)
+			var calendarDropDown = this.getView().byId('calendarComboBox');
+			var dtpStart = this.getView().byId('DTP1');
+			var dtpEnd = this.getView().byId('DTP2');
 
-    calendarSelectionChange:function(event) {
-		this.validateCalendarStartEndDate();
-      	// acknowledge the selection change and update the status accordingly
-      	this.getView().byId("configLabel").setText("Calendar '" + event.getParameters("selectedItem").selectedItem.getText() + "' loaded.");
-    },
+			// First, we need the selected calendar
+			var selectedCalendar = calendarDropDown.getSelectedItem();
 
-    handleStartDateChange:function(event) {
+			// then we need the start date time
+			var startTime = dtpStart.getDateValue();
 
-		this.validateCalendarStartEndDate();
-    },
+			// then we need the end date date
+			var endTime = dtpEnd.getDateValue();
+			var me = this;
+			GoogleCalendarService.getListOfEventsFromCalendarInDateRange(selectedCalendar, startTime, endTime, function (response) {
+				var events = response.result.items;
+				console.log(events);
+				GoogleCalendarService.parseListOfEvents(events, me);
+			});
 
-    handleEndDateChange:function(event) {
+			this.getView().byId('changeChartType').setVisible(true);
 
-		this.validateCalendarStartEndDate();
-    }
+		},
+
+		changeChart: function (event) {
+			var me = this;
+			GoogleChartService.drawChart(this.chartData, this, function () {
+				me.isColumnChart = !(me.isColumnChart);
+			});
+		},
+
+		calendarSelectionChange: function (event) {
+			this.validateCalendarStartEndDate();
+			// acknowledge the selection change and update the status accordingly
+			this.getView().byId('configLabel').setText("Calendar '" + event.getParameters('selectedItem').selectedItem.getText() + "' loaded.");
+		},
+
+		handleStartDateChange: function (event) {
+
+			this.validateCalendarStartEndDate();
+		},
+
+		handleEndDateChange: function (event) {
+
+			this.validateCalendarStartEndDate();
+		}
 
 	});
 });
