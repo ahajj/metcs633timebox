@@ -9,6 +9,8 @@ sap.ui.define([
 	'use strict';
 
 	var signedInGoogle = false;
+	var signedInO365 = false;
+
 
 
 	return Controller.extend('com.metcs633.controller.App', {
@@ -16,11 +18,27 @@ sap.ui.define([
 		formatter: formatter,
 		GoogleCalendarService: GoogleCalendarService,
 
+		set365StatusText: function () {
+			signedInO365 = (localStorage.getItem('msal.idtoken') !== null);
+			if (!signedInO365) {
+				this.getView().byId('signButtonO365').setText('Sign In to O365');
+				this.getView().byId('configLabelO365').setText('Signed Out of O365!');
+			} else {
+				this.getView().byId('signButtonO365').setText('Sign Out of O365');
+				this.getView().byId('configLabelO365').setText('Connected to O365!');
+			}
+		},
+
 		// Connect to Google api by default to grab the calendar
 		onInit: function () {
 			var configLabel = this.getView().byId('configLabel');
 			configLabel.setText('Connecting to Google...');
 			GoogleCalendarService.connectToGoogle(this);
+
+			//Connect to O365
+			var configLabelO365 = this.getView().byId('configLabelO365');
+			this.set365StatusText();
+
 		},
 
 		afterLogin: function () {
@@ -36,6 +54,16 @@ sap.ui.define([
 				GoogleCalendarService.signIn(this);
 			}
 			signedInGoogle = !signedInGoogle;
+		},
+
+		onSignInOutO365Press: function (event) {
+			if (signedInO365) {
+				O365CalendarService.signOut(this);
+				this.set365StatusText();
+			} else {
+				O365CalendarService.signIn(this);
+				this.set365StatusText();
+			}
 		},
 
 		onGetCalendarsPress: function (event) {
