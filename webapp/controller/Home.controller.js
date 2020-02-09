@@ -3,11 +3,13 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"../model/formatter",
-	'../services/GoogleCalendarService'
-], function(Controller, formatter, GoogleCalendarService) {
+	'../services/GoogleCalendarService',
+  '../services/GoogleChartService'
+], function(Controller, formatter, GoogleCalendarService, GoogleChartService) {
 	"use strict";
 
     var signedInGoogle = false;
+
 
 	return Controller.extend("com.metcs633.controller.App", {
 
@@ -18,8 +20,13 @@ sap.ui.define([
 	onInit: function () {
 		var configLabel = this.getView().byId("configLabel");
 		configLabel.setText("Connecting to Google...");
-		GoogleCalendarService.connectToGoogle(configLabel);
+		GoogleCalendarService.connectToGoogle(this);
 	},
+
+  afterLogin:function() {
+    this.getView().byId("signButton").setEnabled(true);
+    this.getView().byId("configLabel").setText("Connected to Google! Now click Sign In.");
+  },
 
 
     onSignInOutGooglePress:function(event) {
@@ -56,6 +63,9 @@ sap.ui.define([
     },
 
     goButton:function(event){
+      // freeze the view so the user knows something is happening
+     // sap.ui.core.
+
     	// figure out the min and max time in order to query google calendar
     	// this button doesn't get enabled until there is data in all 3 prompts (calendar, start & end date)
     	var calendarDropDown = this.getView().byId("calendarComboBox");
@@ -70,9 +80,22 @@ sap.ui.define([
 
     	// then we need the end date date
     	var endTime =dtpEnd.getDateValue();
+      var me = this;
+    	GoogleCalendarService.getListOfEventsFromCalendarInDateRange(selectedCalendar, startTime, endTime, function(response) {
+          var events = response.result.items;
+          console.log(events);
+          GoogleCalendarService.parseListOfEvents(events, me);
+        });
 
-    	GoogleCalendarService.getListOfEventsFromCalendarInDateRange(selectedCalendar, startTime, endTime, this);
+      this.getView().byId("changeChartType").setVisible(true);
 
+    },
+
+    changeChart:function(event) {
+        var me = this;
+        GoogleChartService.drawChart(this.chartData, this, function() {
+          me.isColumnChart = !(me.isColumnChart);
+        });
     },
 
     calendarSelectionChange:function(event) {
