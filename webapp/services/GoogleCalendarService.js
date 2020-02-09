@@ -75,7 +75,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 	// Function to connect to Google Calendars
 	// This gets called on startup
 	Utils.connectToGoogle = function (callback) {
-		//gapi.load('client:auth2', this.initiateClient(callback));
+		gapi.load('client:auth2', this.initiateClient(callback));
 
 	};
 
@@ -145,11 +145,11 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 			calendarDropDown.setModel(listModel);
 			controller.getView().byId('calendarSelectionPanel').setVisible(true);
 			calendarDropDown.setBusy(false);
-			statusLabel.setText('Loaded calendars!')
+			statusLabel.setText('Loaded calendars!');
 
 		});
 		console.log(listOfCalendars);
-	}
+	};
 
 	Utils.getListOfEventsFromCalendarInDateRange = function (calendar, startDate, endDate, callback) {
 
@@ -167,7 +167,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 			'orderBy': 'startTime'
 		}).then(callback);
 
-	}
+	};
 
 	Utils.parseISOStringToDate = function (string) {
 		var b = string.split(/\D+/);
@@ -179,7 +179,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 		// handle the parsing for datetimes
 
 		return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
-	}
+	};
 
 	Utils.getCategoryForEvent = function (event) {
 
@@ -202,7 +202,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 		console.log('Could not find a match for ' + event.name + ' so they are in Other');
 		// return 'Other' as the category if it hits this point
 		return 'Other';
-	}
+	};
 
 	Utils.collectHoursInCategories = function (events) {
 		var squashedEvents = {};
@@ -234,7 +234,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 		}
 
 		return listOfCategories;
-	}
+	};
 
 	Utils.parseListOfEvents = function (events, controller) {
 		var parsedEvents = [];
@@ -288,7 +288,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 			controller.getView().byId('configLabel').setText('Analyzed time!  Scroll down to see a visual representation');
 			controller.isColumnChart = !(controller.isColumnChart);
 		});
-	}
+	};
 
 	return Utils;
 }, true /* bExport */);

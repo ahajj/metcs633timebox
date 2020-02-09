@@ -1,33 +1,47 @@
 //Authors: Andrew Hajj
 
 sap.ui.define([
-	"sap/ui/core/mvc/Controller",
-	"../model/formatter",
+	'sap/ui/core/mvc/Controller',
+	'../model/formatter',
 	'../services/GoogleCalendarService',
 	'../services/GoogleChartService',
 	'../services/O365CalendarService'
 ], function (Controller, formatter, GoogleCalendarService, GoogleChartService, O365CalendarService) {
-	"use strict";
+	'use strict';
 
 	var signedInGoogle = false;
 	var signedInO365 = false;
 
-
-	return Controller.extend("com.metcs633.controller.App", {
+	return Controller.extend('com.metcs633.controller.App', {
 
 		formatter: formatter,
 		GoogleCalendarService: GoogleCalendarService,
 
+		set365StatusText: function () {
+			signedInO365 = (localStorage.getItem('msal.idtoken') !== null);
+			if (!signedInO365) {
+				this.getView().byId('signButtonO365').setText('Sign In to O365');
+				this.getView().byId('configLabelO365').setText('Signed Out of O365!');
+			} else {
+				this.getView().byId('signButtonO365').setText('Sign Out of O365');
+				this.getView().byId('configLabelO365').setText('Connected to O365!');
+			}
+		},
 		// Connect to Google api by default to grab the calendar
 		onInit: function () {
-			var configLabel = this.getView().byId("configLabel");
-			//configLabel.setText("Connecting to Google...");
+
+			var configLabel = this.getView().byId('configLabel');
+			configLabel.setText('Connecting to Google...');
 			GoogleCalendarService.connectToGoogle(this);
+
+			var configLabelO365 = this.getView().byId('configLabelO365');
+			this.set365StatusText();
+
 		},
 
 		afterLogin: function () {
-			this.getView().byId("signButton").setEnabled(true);
-			this.getView().byId("configLabel").setText("Connected to Google! Now click Sign In.");
+			this.getView().byId('signButton').setEnabled(true);
+			this.getView().byId('configLabel').setText('Connected to Google! Now click Sign In.');
 		},
 
 
@@ -41,13 +55,13 @@ sap.ui.define([
 		},
 
 		onSignInOutO365Press: function (event) {
-
 			if (signedInO365) {
 				O365CalendarService.signOut(this);
+				this.set365StatusText();
 			} else {
 				O365CalendarService.signIn(this);
+				this.set365StatusText();
 			}
-			signedInO365 = !signedInO365;
 		},
 
 		onGetCalendarsPress: function (event) {
@@ -57,15 +71,15 @@ sap.ui.define([
 		validateCalendarStartEndDate: function (event) {
 			// only enable the Go button if
 			// A calendar is selected, a start date and an end date are selected
-			var calendarDropDown = this.getView().byId("calendarComboBox");
-			var dtpStart = this.getView().byId("DTP1");
-			var dtpEnd = this.getView().byId("DTP2");
+			var calendarDropDown = this.getView().byId('calendarComboBox');
+			var dtpStart = this.getView().byId('DTP1');
+			var dtpEnd = this.getView().byId('DTP2');
 
 			if (calendarDropDown.getSelectedItem() && dtpStart.getValue() && dtpEnd.getValue()) {
-				this.getView().byId("goButton").setEnabled(true);
+				this.getView().byId('goButton').setEnabled(true);
 			} else {
 
-				this.getView().byId("goButton").setEnabled(false);
+				this.getView().byId('goButton').setEnabled(false);
 			}
 
 		},
@@ -76,9 +90,9 @@ sap.ui.define([
 
 			// figure out the min and max time in order to query google calendar
 			// this button doesn't get enabled until there is data in all 3 prompts (calendar, start & end date)
-			var calendarDropDown = this.getView().byId("calendarComboBox");
-			var dtpStart = this.getView().byId("DTP1");
-			var dtpEnd = this.getView().byId("DTP2");
+			var calendarDropDown = this.getView().byId('calendarComboBox');
+			var dtpStart = this.getView().byId('DTP1');
+			var dtpEnd = this.getView().byId('DTP2');
 
 			// First, we need the selected calendar
 			var selectedCalendar = calendarDropDown.getSelectedItem();
@@ -94,7 +108,7 @@ sap.ui.define([
 				GoogleCalendarService.parseListOfEvents(events, this);
 			});
 
-			this.getView().byId("changeChartType").setVisible(true);
+			this.getView().byId('changeChartType').setVisible(true);
 
 		},
 
@@ -107,7 +121,7 @@ sap.ui.define([
 		calendarSelectionChange: function (event) {
 			this.validateCalendarStartEndDate();
 			// acknowledge the selection change and update the status accordingly
-			this.getView().byId("configLabel").setText("Calendar '" + event.getParameters("selectedItem").selectedItem.getText() + "' loaded.");
+			this.getView().byId('configLabel').setText('Calendar \'' + event.getParameters('selectedItem').selectedItem.getText() + '\' loaded.');
 		},
 
 		handleStartDateChange: function (event) {
