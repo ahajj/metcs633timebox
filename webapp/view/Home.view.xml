@@ -80,6 +80,24 @@
 				class="sapUiSmallMarginTop"
 				text="Not connected to Google...">
 			</Label>
+
+
+			 <Panel>
+                <HBox>
+                    <Button 
+					id="signButtonO365"
+					text="Sign into O365"
+					press="onSignInOutO365Press"
+					class="sapUiTinyMarginEnd"></Button>
+                </HBox>
+                <Label
+				class="sapUiSmallMarginTop sapUiSmallMarginEnd"
+				text="Status O365:"></Label>
+                <Label 
+				id="configLabelO365"
+				class="sapUiSmallMarginTop"
+				text="Not connected to O365..."></Label>
+            </Panel>
 			<Panel>
 				<Button
 					id="changeChartType"
