@@ -197,7 +197,6 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 				console.log('Found ' + event.name + ' paired with ' + key + ' because of keyword: ' + event.keyword);
 				return key;
 			}
-		}
 
 		console.log('Could not find a match for ' + event.name + ' so they are in Other');
 		// return 'Other' as the category if it hits this point
@@ -219,7 +218,6 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 			} else {
 				squashedEvents[event.category] = event.time;
 			}
-		}
 
 		// now loop through the map and build a data map in the appropiate format
 		var listOfCategories = [];
