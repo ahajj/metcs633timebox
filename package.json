@@ -1,10 +1,12 @@
+
+
 {
   "name": "openui5-basic-template-app",
   "version": "0.1.0",
   "description": "Best-practice starting point for building a freestyle app",
   "private": true,
   "scripts": {
-    "start": "python -m SimpleHTTPServer 8000",
+    "start": "node ./bin/www",
     "start-o365": "node ./bin/www",
     "lint": "eslint webapp",
     "karma": "karma start",
@@ -14,11 +16,11 @@
     "build": "rimraf dist && ui5 build --a"
   },
   "dependencies": {
+    "@microsoft/microsoft-graph-client": "^1.0.0",
     "@openui5/sap.m": "^1.52.5",
     "@openui5/sap.ui.core": "^1.52.5",
     "@openui5/sap.ui.layout": "^1.52.5",
     "@openui5/themelib_sap_belize": "^1.52.5",
-    "@microsoft/microsoft-graph-client": "^1.0.0",
     "axios": "^0.19.2",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
@@ -30,13 +32,25 @@
     "lodash": "^4.17.15",
     "morgan": "~1.9.0",
     "msal": "^1.2.1",
+    "npm": "^6.13.7",
     "qs": "^6.9.1",
     "serve-favicon": "~2.4.5",
+    "serve-index": "^1.9.1",
     "simple-oauth2": "^3.0.0"
   },
   "devDependencies": {
     "@ui5/cli": "^1.0.0",
-    "eslint": "^4.19.1",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "gulp": "^4.0.2",
+    "gulp-if": "^3.0.0",
+    "gulp-pretty-data": "^0.1.2",
+    "gulp-uglify": "^3.0.2",
+    "gulp-ui5-preload": "^1.3.1",
     "karma": "^4.0.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.2",
