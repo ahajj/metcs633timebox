@@ -9,7 +9,7 @@ sap.ui.define([],
 		var oMsalClient = null;
 
 		var APP_ID = 'f43b3bbb-f2aa-4134-9518-e0a190584c6f';
-		var APP_SCOPES = ['Calendars.Read', 'Calendars.ReadWrite'];
+		var APP_SCOPES = ['Calendars.Read'];
 		var config = {
 			msalConfig: {
 				auth: {
