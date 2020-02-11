@@ -61,10 +61,10 @@ sap.ui.define([],
 		function set365StatusText(event) {
 			var signedInO365 = (localStorage.getItem('msal.idtoken') !== null);
 			if (!signedInO365) {
-				event.getView().byId('signButtonO365').setText('Sign In to O365');
+			//	event.getView().byId('signButtonO365').setText('Sign In to O365');
 				event.getView().byId('configLabelO365').setText('Signed Out of O365!');
 			} else {
-				event.getView().byId('signButtonO365').setText('Sign Out of O365');
+			//	event.getView().byId('signButtonO365').setText('Sign Out of O365');
 				event.getView().byId('configLabelO365').setText('Connected to O365!');
 			}
 		};
@@ -72,6 +72,7 @@ sap.ui.define([],
 		// #endregion
 		Utils.initiateClient = function (event, signout) {
 			var oMsalClient = getMSGraphClient();
+			var me = this;
 			if (signout) {
 				oMsalClient.logout();
 				set365StatusText(event);
@@ -81,6 +82,7 @@ sap.ui.define([],
 			if (!oMsalClient.getAccount()) {
 				oMsalClient.loginPopup(config.scopeConfig).then(function (res) {
 					set365StatusText(event);
+       				me.getCalendars();
 					return res;
 				}).catch(function (error) {
 					handleAuthError(error);
@@ -107,7 +109,7 @@ sap.ui.define([],
 					headers: {
 						Authorization: 'Bearer ' + token.accessToken
 					},
-					url: 'config.graphBaseEndpoint' + '/me/calendars',
+					url: config.graphBaseEndpoint + '/me/calendars',
 					type: 'GET'
 				}).then(function (res) {
 					console.log('getCalendars', res);

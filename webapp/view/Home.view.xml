@@ -5,171 +5,209 @@
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:l="sap.ui.layout"		
 	xmlns:core="sap.ui.core">
-	<Page
-		id="page"
-		title="{i18n>title}"
-		class="sapUiResponsiveContentPadding">
-		<content>
-			<Text class="sapUiSmallMarginTopBottom" text="Welcome to the Timebox Tool!  The first step is to sign in to Google, then choose the calendar you would like to analyze!">
-			</Text>
-			<HBox>
-				<Button 
-					id="signButton"
-					text="Sign into Google"
-					enabled="false"
-					busyIndicatorDelay="0"
-					busy="true"
-					press="onSignInOutGooglePress"
-					class="sapUiTinyMarginEnd">
-				</Button>
-			</HBox>
-			<Panel
-				id="calendarSelectionPanel"
-				visible="false">
-				<Text class="sapUiSmallMarginTopBottom" text="Next, choose the calendar from your account, as well as the start and end date"> 
-				</Text>
-				<VBox class = "sapUiSmallMarginTopBottom">
+	<!-- <NavContainer id="wizardNavContainer"> -->
+	<!-- <pages> -->
+		<Page
+			id="page"
+			title="{i18n>title}"
+			class="sapUiResponsiveContentPadding">
+			<content>
 
-					<Label text="Choose a Calendar: " labelFor="calendarComboBox"/>
-					<ComboBox
-						placeholder="Choose a Calendar"
-						id="calendarComboBox"
-						busyIndicatorDelay="0"
-						items="{
-							path: '/'
-						}"
-						class="sapUiTinyMarginEnd"
-						required="true"
-						selectionChange="calendarSelectionChange">
-						<core:Item key="{id}" text="{name}" />
-					</ComboBox>
-					<HBox>	
-						<VBox class = "sapUiSmallMarginEnd">
-							<Label text="Choose a start date: " labelFor="DTP1"/>
-							<DatePicker
-								id="DTP1"
-								placeholder="Enter Date ..."
-								change="handleStartDateChange"
-								required="true"
-								class="sapUiSmallMarginBottom"/>
-						</VBox>		
+				<Wizard id="CreateProductWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content"
+					complete="wizardCompletedHandler">
+					<WizardStep id="googleOrOutlookStep"
+								title="Choose Source"
+								validated="true">
+						<Text class="sapUiSmallMarginBottom"
+								text="Welcome to the Timebox Tool! The first step is to choose Google or o365.  Click one below to continue."/>
+						<HBox
+								alignItems="Center"
+								justifyContent="Center"
+								width="100%">
+							<SegmentedButton
+								width="320px"
+								selectionChange="setCalendarTypeFromButton">
+								<items>
+									<SegmentedButtonItem icon="sap-icon://iphone" text="Google"/>
+									<SegmentedButtonItem icon="sap-icon://sys-monitor" text="o365"/>
+								</items>
+							</SegmentedButton>
+						</HBox>
+						<HBox>
+							<VBox>
+
+								<Label
+									class="sapUiSmallMarginTop sapUiSmallMarginEnd"
+									text="Status:">
+								</Label>
+								<Label 
+									id="configLabel"
+									class="sapUiSmallMarginTop"
+									text="Not connected to Google...">
+								</Label>
+							</VBox>
+							<VBox class="sapUiSmallMarginTop sapUiSmalllMarginBegin">
+							 <Label
+								text="Status O365:"></Label>
+				                <Label 
+								id="configLabelO365"
+								class="sapUiSmallMarginTop"
+								text="Not connected to O365..."></Label>
+							</VBox>
+						</HBox>
+					</WizardStep>
+					<WizardStep id="signInAndChooseCalendarStep"
+									validated="false"
+									title="Sign and Choose Calendar"
+									complete="goButton"
+									activate="signInAndChoosseValidation">
 						<VBox>
-							<Label text="Choose an end date: " labelFor="DTP2"/>
-							<DatePicker
-								id="DTP2"
-								placeholder="Enter Date ..."
-								required="true"
-								change="handleEndDateChange"
-								class="sapUiSmallMarginBottom"/>
+							<Text class="sapUiSmallMarginBottom"
+								text="Next, login, choose a calendar and select a date range"/>
+							<Button 
+								id="signButton"
+								text="Sign in"
+								enabled="false"
+								busyIndicatorDelay="0"
+								busy="true"
+								press="onSignIn"
+								class="sapUiSmallMarginEnd">
+							</Button>
 						</VBox>
-					</HBox>
-					<Button
-						id="goButton"
-						text="Go!"
-						enabled="false"
-						press="goButton">
-					</Button>
-				</VBox>
-			</Panel>
-			<Label
-				class="sapUiSmallMarginTop sapUiSmallMarginEnd"
-				text="Status:">
-			</Label>
-			<Label 
-				id="configLabel"
-				class="sapUiSmallMarginTop"
-				text="Not connected to Google...">
-			</Label>
-
-
-			 <Panel>
-                <HBox>
-                    <Button 
-					id="signButtonO365"
-					text="Sign into O365"
-					press="onSignInOutO365Press"
-					class="sapUiTinyMarginEnd"></Button>
-                </HBox>
-                <Label
-				class="sapUiSmallMarginTop sapUiSmallMarginEnd"
-				text="Status O365:"></Label>
-                <Label 
-				id="configLabelO365"
-				class="sapUiSmallMarginTop"
-				text="Not connected to O365..."></Label>
-            </Panel>
-			<Panel>
-				<Button
-					id="changeChartType"
-					text="Change Chart"
-					press="changeChart"
-					visible="false">
-				</Button>
-				<FlexBox
-					alignItems="Center"
-					justifyContent="Center">
-					<items>
 						<Panel
-							id="barChartPanel">
+							id="calendarSelectionPanel"
+							visible="false">
+							<VBox class = "sapUiSmallMarginTopBottom">
+
+								<Label text="Choose a Calendar: " labelFor="calendarComboBox"/>
+								<ComboBox
+									placeholder="Choose a Calendar"
+									id="calendarComboBox"
+									busyIndicatorDelay="0"
+									items="{
+										path: '/'
+									}"
+									class="sapUiTinyMarginEnd"
+									required="true"
+									selectionChange="calendarSelectionChange">
+									<core:Item key="{id}" text="{name}" />
+								</ComboBox>
+								<HBox>	
+									<VBox class = "sapUiSmallMarginEnd">
+										<Label text="Choose a start date: " labelFor="DTP1"/>
+										<DatePicker
+											id="DTP1"
+											placeholder="Enter Date ..."
+											change="handleStartDateChange"
+											required="true"
+											class="sapUiSmallMarginBottom"/>
+									</VBox>		
+									<VBox>
+										<Label text="Choose an end date: " labelFor="DTP2"/>
+										<DatePicker
+											id="DTP2"
+											placeholder="Enter Date ..."
+											required="true"
+											change="handleEndDateChange"
+											class="sapUiSmallMarginBottom"/>
+									</VBox>
+								</HBox>
+								<Button
+									id="goButton"
+									text="Get Events"
+									visible="false"
+									press="goButton">
+								</Button>
+							</VBox>
 						</Panel>
-					</items>
-				</FlexBox>
-			</Panel>
-			<Table
-				id="eventsTable"
-				inset="false"
-				visible="false"
-				items="{
-					path: '/',
-					sorter: [{
-						path: 'category'
-					}, 
-					{
-						path: 'name'
-					}, 
-					{
-						path: 'keyword'
-					}]
-				}">
-				<columns>
-					<Column
-						width="12em">
-						<Text text="Event" />
-					</Column>
-					<Column
-						demandPopin="true">
-						<Text text="Category" />
-					</Column>
-					<Column
-						demandPopin="true">
-						<Text text="Keyword" />
-					</Column>
-					<Column
-						demandPopin="true">
-						<Text text="Date" />
-					</Column>
-					<Column
-						demandPopin="true">
-						<Text text="Hours" />
-					</Column>
-				</columns>
-				<items>
-					<ColumnListItem>
-						<cells>
-							<Text
-								text="{name}"/>
-							<Text
-								text="{category}" />
-							<Text
-								text="{keyword}" />
-							<Text
-								text="{startTimeString}" />
-							<Text
-								text="{time}" />
-						</cells>
-					</ColumnListItem>
-				</items>
-			</Table>
-		</content>
-	</Page>
+					</WizardStep>
+					<WizardStep id="showChart"
+								activate="pricingActivate"
+								complete="pricingComplete"
+								validated="false"
+								title="Chart">
+						<Panel>
+							<Button
+								id="changeChartType"
+								text="Change Chart"
+								press="changeChart"
+								visible="false">
+							</Button>
+							<FlexBox
+								alignItems="Center"
+								justifyContent="Center">
+								<items>
+									<Panel
+										id="barChartPanel">
+									</Panel>
+								</items>
+							</FlexBox>
+						</Panel>
+					</WizardStep>
+					<WizardStep id="showTable"
+						activate="pricingActivate"
+						complete="pricingComplete"
+						validated="true"
+						title="Events">
+						<Table
+							id="eventsTable"
+							inset="false"
+							visible="false"
+							items="{
+								path: '/',
+								sorter: [{
+									path: 'category'
+								}, 
+								{
+									path: 'name'
+								}, 
+								{
+									path: 'keyword'
+								}]
+							}">
+							<columns>
+								<Column
+									width="12em">
+									<Text text="Event" />
+								</Column>
+								<Column
+									demandPopin="true">
+									<Text text="Category" />
+								</Column>
+								<Column
+									demandPopin="true">
+									<Text text="Keyword" />
+								</Column>
+								<Column
+									demandPopin="true">
+									<Text text="Date" />
+								</Column>
+								<Column
+									demandPopin="true">
+									<Text text="Hours" />
+								</Column>
+							</columns>
+							<items>
+								<ColumnListItem>
+									<cells>
+										<Text
+											text="{name}"/>
+										<Text
+											text="{category}" />
+										<Text
+											text="{keyword}" />
+										<Text
+											text="{startTimeString}" />
+										<Text
+											text="{time}" />
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</WizardStep>
+				</Wizard>
+			</content>
+		</Page>
+			<!-- </pages>
+		</NavContainer> -->
 </mvc:View>

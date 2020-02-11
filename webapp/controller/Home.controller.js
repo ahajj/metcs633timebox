@@ -11,7 +11,7 @@ sap.ui.define([
 
 	var signedInGoogle = false;
 	var signedInO365 = false;
-
+  var isGoogle = true;
 
 
 	return Controller.extend('com.metcs633.controller.App', {
@@ -19,13 +19,31 @@ sap.ui.define([
 		formatter: formatter,
 		GoogleCalendarService: GoogleCalendarService,
 
+    setCalendarTypeFromButton: function(event) {
+      isGoogle = (event.getParameters().item.getText() === "Google") ? true : false;
+
+      // if it goes in here that means we need to reset all the things
+      if (this._wizard.getProgress() > 1)
+      {
+                var calendarDropDown = this.getView().byId('calendarComboBox');
+      var dtpStart = this.getView().byId('DTP1');
+      var dtpEnd = this.getView().byId('DTP2');
+      calendarDropDown.setSelectedItem("");
+      dtpStart.setValue("");
+      dtpEnd.setValue("");
+          this._wizard.discardProgress(this._wizard.getSteps()[0]);
+
+      }
+
+    },
+
 		set365StatusText: function () {
 			signedInO365 = (localStorage.getItem('msal.idtoken') !== null);
 			if (!signedInO365) {
-				this.getView().byId('signButtonO365').setText('Sign In to O365');
+				//this.getView().byId('signButtonO365').setText('Sign In to O365');
 				this.getView().byId('configLabelO365').setText('Signed Out of O365!');
 			} else {
-				this.getView().byId('signButtonO365').setText('Sign Out of O365');
+				//this.getView().byId('signButtonO365').setText('Sign Out of O365');
 				this.getView().byId('configLabelO365').setText('Connected to O365!');
 			}
 		},
@@ -39,6 +57,7 @@ sap.ui.define([
 			//Connect to O365
 			var configLabelO365 = this.getView().byId('configLabelO365');
 			this.set365StatusText();
+      this._wizard = this.getView().byId("CreateProductWizard");
 
 		},
 
@@ -47,6 +66,15 @@ sap.ui.define([
 			this.getView().byId('configLabel').setText('Connected to Google! Now click Sign In.');
 		},
 
+    onSignIn: function(event) {
+        if(isGoogle)
+        {
+          this.onSignInOutGooglePress();
+        }
+        else {
+          this.onSignInOutO365Press();
+        }
+    },
 
 		onSignInOutGooglePress: function (event) {
 			if (signedInGoogle) {
@@ -71,6 +99,20 @@ sap.ui.define([
 
 		},
 
+      signInAndChoosseValidation: function (event) {
+      // only enable the Go button if
+      // A calendar is selected, a start date and an end date are selected
+      var calendarDropDown = this.getView().byId('calendarComboBox');
+      var dtpStart = this.getView().byId('DTP1');
+      var dtpEnd = this.getView().byId('DTP2');
+
+      if (calendarDropDown.getSelectedItem() && dtpStart.getValue() && dtpEnd.getValue()) {
+        return true;
+      } 
+      return false;
+
+    },
+
 		validateCalendarStartEndDate: function (event) {
 			// only enable the Go button if
 			// A calendar is selected, a start date and an end date are selected
@@ -79,10 +121,11 @@ sap.ui.define([
 			var dtpEnd = this.getView().byId('DTP2');
 
 			if (calendarDropDown.getSelectedItem() && dtpStart.getValue() && dtpEnd.getValue()) {
-				this.getView().byId('goButton').setEnabled(true);
+        this._wizard.validateStep(this.byId("signInAndChooseCalendarStep"));
+				//this.getView().byId('goButton').setEnabled(true);
 			} else {
-
-				this.getView().byId('goButton').setEnabled(false);
+        this._wizard.invalidateStep(this.byId("signInAndChooseCalendarStep"));
+        this._wizard.goToStep(this.byId("signInAndChooseCalendarStep"));
 			}
 
 		},
@@ -111,8 +154,13 @@ sap.ui.define([
 				console.log(events);
 				GoogleCalendarService.parseListOfEvents(events, me);
 			});
-
-			this.getView().byId('changeChartType').setVisible(true);
+      if (!this.getView().byId("goButton").getVisible())
+      {
+        this.getView().byId('changeChartType').setVisible(true);
+        this.getView().byId("goButton").setVisible(true);
+        this.byId("showChart").fireComplete();
+      }
+      this._wizard.goToStep(this.getView().byId("showChart"));
 
 		},
 

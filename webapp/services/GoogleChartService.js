@@ -49,14 +49,14 @@ sap.ui.define('com/metcs633/services/GoogleChartService', [
 				var listModel = new sap.ui.model.json.JSONModel();
 				listModel.setData(pickedEvents);
 				controller.getView().byId('eventsTable').setModel(listModel);
-				controller.getView().byId('page').scrollToElement(controller.getView().byId('eventsTable'));
+				controller._wizard.goToStep(controller.getView().byId("showTable"));
 			});
 		});
 
 		chart.draw(data, options);
 
 		callback();
-		controller.getView().byId('page').scrollToElement(controller.getView().byId('barChartPanel'));
+		controller._wizard.goToStep(controller.getView().byId("showChart"));
 	};
 
 	return Utils;
