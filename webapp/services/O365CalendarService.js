@@ -107,7 +107,7 @@ sap.ui.define([],
 					headers: {
 						Authorization: 'Bearer ' + token.accessToken
 					},
-					url: 'config.graphBaseEndpoint' + '/me/calendars',
+					url: `${config.graphBaseEndpoint}/me/calendars`,
 					type: 'GET'
 				}).then(function (res) {
 					console.log('getCalendars', res);
@@ -125,7 +125,7 @@ sap.ui.define([],
 					headers: {
 						Authorization: 'Bearer ' + token.accessToken
 					},
-					url: 'config.graphBaseEndpoint' + '/me/calendars/' + id,
+					url: `${config.graphBaseEndpoint}/me/calendars/${id}`,
 					type: 'GET'
 				}).then(function (res) {
 					console.log('getCalendars', res);
@@ -153,16 +153,16 @@ sap.ui.define([],
 
 			var apiUrl = '';
 			if (calendarId && calendarId.length > 0) {
-				apiUrl = '/me/calendars/' + calendarId + '/calendarView?startDateTime=' + start.toISOString() + '&endDateTime=' + end.toISOString();
+				apiUrl = `/me/calendars/${calendarId}/calendarView?startDateTime=${start.toISOString()}'&endDateTime=${end.toISOString()}`;
 			} else {
-				apiUrl = '/me/calendar/calendarView?startDateTime=' + start.toISOString() + '&endDateTime=' + end.toISOString();
+				apiUrl = `/me/calendar/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
 			}
 			getMSGraphClient().acquireTokenSilent(config.scopeConfig).then(function (token) {
 				$.ajax({
 					headers: {
 						Authorization: 'Bearer ' + token.accessToken
 					},
-					url: config.graphBaseEndpoint + apiUrl,
+					url: `${config.graphBaseEndpoint}${apiUrl}`,
 					type: 'GET'
 				}).then((categories) => {
 					console.log('getCategories', categories);
@@ -196,16 +196,16 @@ sap.ui.define([],
 
 			var apiUrl = '';
 			if (calendarId && calendarId.length > 0) {
-				apiUrl = '/me/calendars/' + calendarId + '/calendarView?startDateTime=' + start.toISOString() + '&endDateTime=' + end.toISOString();
+				apiUrl = `/me/calendars/${calendarId}/calendarView?startDateTime=${start.toISOString()}'&endDateTime=${end.toISOString()}`;
 			} else {
-				apiUrl = '/me/calendar/calendarView?startDateTime=' + start.toISOString() + '&endDateTime=' + end.toISOString();
+				apiUrl = `/me/calendar/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
 			}
 			getMSGraphClient().acquireTokenSilent(config.scopeConfig).then(function (token) {
 				$.ajax({
 					headers: {
 						Authorization: 'Bearer ' + token.accessToken
 					},
-					url: config.graphBaseEndpoint + apiUrl,
+					url: `${config.graphBaseEndpoint}${apiUrl}`,
 					type: 'GET'
 				}).then((res) => {
 					console.log('getCategoriesTime', res);
@@ -251,16 +251,16 @@ sap.ui.define([],
 
 			var apiUrl = '';
 			if (calendarId && calendarId.length > 0) {
-				apiUrl = '/me/calendars/' + calendarId + '/calendarView?startDateTime=' + start.toISOString() + '&endDateTime=' + end.toISOString();
+				apiUrl = `/me/calendars/${calendarId}/calendarView?startDateTime=${start.toISOString()}'&endDateTime=${end.toISOString()}`;
 			} else {
-				apiUrl = '/me/calendar/calendarView?startDateTime=' + start.toISOString() + '&endDateTime=' + end.toISOString();
+				apiUrl = `/me/calendar/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
 			}
 			getMSGraphClient().acquireTokenSilent(config.scopeConfig).then(function (token) {
 				$.ajax({
 					headers: {
 						Authorization: 'Bearer ' + token.accessToken
 					},
-					url: config.graphBaseEndpoint + apiUrl,
+					url: `${config.graphBaseEndpoint}${apiUrl}`,
 					type: 'GET'
 				}).then(function (res) {
 					if (filterToCategory && filterToCategory.length > 0) {
