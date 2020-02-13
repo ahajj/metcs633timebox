@@ -82,7 +82,7 @@ sap.ui.define([],
 			if (!oMsalClient.getAccount()) {
 				oMsalClient.loginPopup(config.scopeConfig).then(function (res) {
 					set365StatusText(event);
-       				me.getCalendars();
+       				me.getCalendars(event.setCalendarDropDownEvents.bind(event));
 					return res;
 				}).catch(function (error) {
 					handleAuthError(error);
@@ -102,7 +102,7 @@ sap.ui.define([],
 		};
 
 		// #region Calendars
-		Utils.getCalendars = function () {
+		Utils.getCalendars = function (callback) {
 			getMSGraphClient().acquireTokenSilent(config.scopeConfig).then(function (token) {
 				// eslint-disable-next-line no-undef
 				$.ajax({
@@ -115,6 +115,7 @@ sap.ui.define([],
 					type: 'GET'
 				}).then(function (res) {
 					console.log('getCalendars', res);
+					callback(res.value);
 					return res;
 				}).fail(function (error) {
 					handleAuthError(error);
@@ -241,7 +242,7 @@ sap.ui.define([],
 		// #endregion
 
 		// #region Events
-		Utils.getEvents = function (startDate, endDate, calendarId = '', filterToCategory = '') {
+		Utils.getEvents = function (startDate, endDate, calendarId = '', callback, filterToCategory = '') {
 			var start = new Date();
 			var end = new Date();
 
@@ -260,21 +261,36 @@ sap.ui.define([],
 				apiUrl = `/me/calendar/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
 			}
 			getMSGraphClient().acquireTokenSilent(config.scopeConfig).then(function (token) {
+
+				// first get a count of events
+				// then select all of those events
 				$.ajax({
 					headers: {
 						Authorization: 'Bearer ' + token.accessToken
 					},
-					url: `${config.graphBaseEndpoint}${apiUrl}`,
+					url: `${config.graphBaseEndpoint}${apiUrl}&$count=true`,
 					type: 'GET'
 				}).then(function (res) {
-					if (filterToCategory && filterToCategory.length > 0) {
-						res.value = filterToCategory(res, filterToCategory);
-					}
-					console.log('getEvents', res);
-					return res;
+					$.ajax({
+						headers: {
+							Authorization: 'Bearer ' + token.accessToken
+						},
+						url: `${config.graphBaseEndpoint}${apiUrl}&$top=${res["@odata.count"]}`,
+						type: 'GET'
+					}).then(function (res) {
+						if (filterToCategory && filterToCategory.length > 0) {
+							res.value = filterToCategory(res, filterToCategory);
+						}
+						console.log('getEvents', res);
+						callback(res);
+						return res;
+					}).fail(function (error) {
+						handleAuthError(error);
+					});
 				}).fail(function (error) {
 					handleAuthError(error);
 				});
+
 			});
 		};
 		// #endregion

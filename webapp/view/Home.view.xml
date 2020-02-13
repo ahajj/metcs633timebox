@@ -17,6 +17,7 @@
 					complete="wizardCompletedHandler">
 					<WizardStep id="googleOrOutlookStep"
 								title="Choose Source"
+								complete="chooseStepCompleted"
 								validated="true">
 						<Text class="sapUiSmallMarginBottom"
 								text="Welcome to the Timebox Tool! The first step is to choose Google or o365.  Click one below to continue."/>

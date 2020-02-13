@@ -79,7 +79,8 @@ sap.ui.define([
 		onSignInOutGooglePress: function (event) {
 			if (signedInGoogle) {
 				GoogleCalendarService.signOut(this);
-			} else {
+			} else {   // first turn on the busy indicator
+        this.getView().byId('calendarComboBox').setBusy(true);
 				GoogleCalendarService.signIn(this);
 			}
 			signedInGoogle = !signedInGoogle;
@@ -94,7 +95,34 @@ sap.ui.define([
 				this.set365StatusText();
 			}
 		},
+    chooseStepCompleted:function (event) {
+        // We don't keep the cookies for Google, but we do for outlook
+        // if this if coming from step 1 then check if the user is signed in
+        // if so, go right to getting the calendars
+        if (!isGoogle && signedInO365)
+        {
+              this.set365StatusText();
+              O365CalendarService.getCalendars(this.setCalendarDropDownEvents.bind(this));
+        }
 
+    },
+
+    setCalendarDropDownEvents(events)
+     {
+
+
+        var calendarDropDown = this.getView().byId('calendarComboBox');
+        var statusLabel = this.getView().byId('configLabel');
+                // add the list of parsed calendars to the dropdown for user to select
+        var listModel = new sap.ui.model.json.JSONModel();
+
+
+        listModel.setData(events);
+        calendarDropDown.setModel(listModel);
+        this.getView().byId('calendarSelectionPanel').setVisible(true);
+        calendarDropDown.setBusy(false);
+        statusLabel.setText('Loaded calendars!');
+     },
 		onGetCalendarsPress: function (event) {
 
 		},
@@ -133,7 +161,7 @@ sap.ui.define([
 		goButton: function (event) {
 			// freeze the view so the user knows something is happening
 			// sap.ui.core.
-
+      this.getView().byId("page").setBusy(true);
 			// figure out the min and max time in order to query google calendar
 			// this button doesn't get enabled until there is data in all 3 prompts (calendar, start & end date)
 			var calendarDropDown = this.getView().byId('calendarComboBox');
@@ -149,11 +177,24 @@ sap.ui.define([
 			// then we need the end date date
 			var endTime = dtpEnd.getDateValue();
 			var me = this;
-			GoogleCalendarService.getListOfEventsFromCalendarInDateRange(selectedCalendar, startTime, endTime, function (response) {
-				var events = response.result.items;
-				console.log(events);
-				GoogleCalendarService.parseListOfEvents(events, me);
-			});
+
+      if(isGoogle)
+      {
+          GoogleCalendarService.getListOfEventsFromCalendarInDateRange(selectedCalendar, startTime, endTime, function (response) {
+            var events = response.result.items;
+            //console.log(events);
+            GoogleCalendarService.parseListOfEvents(events, me.setChartAfterParsingEvents.bind(me));
+            me.getView().byId("page").setBusy(false);
+          });  
+      }
+			else {
+          O365CalendarService.getEvents(startTime, endTime, selectedCalendar, function (response) {
+            var events = response.value;
+            GoogleCalendarService.parseListOfEvents(events, me.setChartAfterParsingEvents.bind(me));
+            me.getView().byId("page").setBusy(false);
+           // GoogleCalendarService.parseListOfEvents(events, me);
+          });  
+      }
       if (!this.getView().byId("goButton").getVisible())
       {
         this.getView().byId('changeChartType').setVisible(true);
@@ -163,6 +204,24 @@ sap.ui.define([
       this._wizard.goToStep(this.getView().byId("showChart"));
 
 		},
+
+    setChartAfterParsingEvents:function(categorizedData, parsedEvents)
+    {
+            // set the data back into the conteroller so it's retrievable after
+      this.chartData = categorizedData;
+      this.parsedEvents = parsedEvents;
+      this.isColumnChart = (this.hasOwnProperty('isColumnChart')) ? !(this.isColumnChart) : true;
+      var me = this;
+      GoogleChartService.drawChart(categorizedData, me, function () {
+        // fill in the table
+        var listModel = new sap.ui.model.json.JSONModel();
+        listModel.setData(parsedEvents);
+        me.getView().byId('eventsTable').setModel(listModel);
+        me.getView().byId('eventsTable').setVisible(true);
+        me.getView().byId('configLabel').setText('Analyzed time!  Scroll down to see a visual representation');
+        me.isColumnChart = !(me.isColumnChart);
+      });
+    },
 
 		changeChart: function (event) {
 			var me = this;

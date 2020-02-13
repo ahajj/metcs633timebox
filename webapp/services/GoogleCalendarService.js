@@ -60,8 +60,9 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 		gapi.auth2.getAuthInstance().signIn();
 		event.getView().byId('signButton').setText('Sign Out of Google');
 		event.getView().byId('configLabel').setText('Connected to Google!');
-		// get the list of calendars and pass in the combobox so it can filled
-		this.getCalendars(event);
+		// get the list of calendars and pass in the combobox so it can filled		// first turn on the busy indicator
+		
+		this.getCalendars(event.setCalendarDropDownEvents.bind(event));
 	};
 
 	// Function to signout of Google
@@ -107,12 +108,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 	};
 
 	// Get the list of Calendars
-	Utils.getCalendars = function (controller) {
-
-		var calendarDropDown = controller.getView().byId('calendarComboBox');
-		var statusLabel = controller.getView().byId('configLabel');
-		// first turn on the busy indicator
-		calendarDropDown.setBusy(true);
+	Utils.getCalendars = function (callback) {
 
 		// initialize the list of parsed calendar data
 		var parsedList = [];
@@ -141,13 +137,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 
 			// add the list of parsed calendars to the dropdown for user to select
 			var listModel = new sap.ui.model.json.JSONModel();
-
-
-			listModel.setData(parsedList);
-			calendarDropDown.setModel(listModel);
-			controller.getView().byId('calendarSelectionPanel').setVisible(true);
-			calendarDropDown.setBusy(false);
-			statusLabel.setText('Loaded calendars!');
+			callback(parsedList);
 
 		});
 		console.log(listOfCalendars);
@@ -243,7 +233,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 		},
 
 
-		Utils.parseListOfEvents = function (events, controller) {
+		Utils.parseListOfEvents = function (events, callback) {
 			var parsedEvents = [];
 
 			for (var i = 0; i < events.length; i++) {
@@ -254,9 +244,9 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 
 				var startTime = (event.start.dateTime) ? event.start.dateTime : event.start.date;
 				var endTime = (event.end.dateTime) ? event.end.dateTime : event.end.date;
-				var description = (event.description) ? event.description : '';
+				var description = (event.description) ? event.description : (event.hasOwnProperty("bodyPreview") ? event.bodyPreview : '');
 
-				parsedEvent.name = event.summary;
+				parsedEvent.name = (event.hasOwnProperty("summary")) ? event.summary : event.subject;
 				parsedEvent.description = description;
 				parsedEvent.startTimeString = startTime;
 				parsedEvent.endTimeString = endTime;
@@ -281,20 +271,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 			// add all the hours in a category
 			var catData = this.collectHoursInCategories(parsedEvents);
 
-			// set the data back into the conteroller so it's retrievable after
-			controller.chartData = catData;
-			controller.parsedEvents = parsedEvents;
-			controller.isColumnChart = (controller.hasOwnProperty('isColumnChart')) ? !(controller.isColumnChart) : true;
-
-			GoogleChartService.drawChart(catData, controller, function () {
-				// fill in the table
-				var listModel = new sap.ui.model.json.JSONModel();
-				listModel.setData(parsedEvents);
-				controller.getView().byId('eventsTable').setModel(listModel);
-				controller.getView().byId('eventsTable').setVisible(true);
-				controller.getView().byId('configLabel').setText('Analyzed time!  Scroll down to see a visual representation');
-				controller.isColumnChart = !(controller.isColumnChart);
-			});
+			callback(catData, parsedEvents);
 		};
 
 	return Utils;
