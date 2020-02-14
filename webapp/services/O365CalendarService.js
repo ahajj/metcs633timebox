@@ -8,6 +8,21 @@ sap.ui.define([],
 		var Utils = {};
 		var oMsalClient = null;
 
+		var toastOptions = {
+			duration: 2000,                  // default
+			width: "15em",                   // default
+			my: "center top",             // default
+			at: "center top",             // default
+			of: window,                      // default
+			offset: "0 0",                   // default
+			collision: "fit fit",            // default
+			onClose: null,                   // default
+			autoClose: true,                 // default
+			animationTimingFunction: "ease", // default
+			animationDuration: 2000,         // default
+			closeOnBrowserNavigation: true   // default
+		};
+
 		var APP_ID = 'f43b3bbb-f2aa-4134-9518-e0a190584c6f';
 		var APP_SCOPES = ['Calendars.Read'];
 		var config = {
@@ -61,11 +76,13 @@ sap.ui.define([],
 		function set365StatusText(event) {
 			var signedInO365 = (localStorage.getItem('msal.idtoken') !== null);
 			if (!signedInO365) {
-			//	event.getView().byId('signButtonO365').setText('Sign In to O365');
-				event.getView().byId('configLabelO365').setText('Signed Out of O365!');
+				//event.getView().byId('signButtonO365').setText('Sign In to O365');
+				//event.getView().byId('configLabelO365').setText('Signed Out of O365!');
+				sap.m.MessageToast.show('Signed Out of O365!', toastOptions);
 			} else {
-			//	event.getView().byId('signButtonO365').setText('Sign Out of O365');
-				event.getView().byId('configLabelO365').setText('Connected to O365!');
+				//event.getView().byId('signButtonO365').setText('Sign Out of O365');
+				//event.getView().byId('configLabelO365').setText('Connected to O365!');
+				sap.m.MessageToast.show('Connected to O365!', toastOptions);
 			}
 		};
 
@@ -82,7 +99,7 @@ sap.ui.define([],
 			if (!oMsalClient.getAccount()) {
 				oMsalClient.loginPopup(config.scopeConfig).then(function (res) {
 					set365StatusText(event);
-       				me.getCalendars(event.setCalendarDropDownEvents.bind(event));
+					me.getCalendars(event.setCalendarDropDownEvents.bind(event));
 					return res;
 				}).catch(function (error) {
 					handleAuthError(error);
