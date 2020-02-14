@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "start-nm":"nodemon",
+    "start-nm": "nodemon",
     "lint": "eslint webapp",
     "karma": "karma start",
     "karma-ci": "karma start karma-ci.conf.js",
@@ -31,6 +31,7 @@
     "morgan": "~1.9.0",
     "msal": "^1.2.1",
     "npm": "^6.13.7",
+    "opn": "^6.0.0",
     "qs": "^6.9.1",
     "serve-favicon": "~2.4.5",
     "serve-index": "^1.9.1",
