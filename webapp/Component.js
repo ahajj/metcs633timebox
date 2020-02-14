@@ -6,7 +6,6 @@ sap.ui.define([
 	'use strict';
 
 	return UIComponent.extend('com.metcs633.Component', {
-
 		metadata: {
 			manifest: 'json'
 		},
