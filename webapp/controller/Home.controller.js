@@ -25,12 +25,13 @@ sap.ui.define([
       // if it goes in here that means we need to reset all the things
       if (this._wizard.getProgress() > 1)
       {
-                var calendarDropDown = this.getView().byId('calendarComboBox');
-      var dtpStart = this.getView().byId('DTP1');
-      var dtpEnd = this.getView().byId('DTP2');
-      calendarDropDown.setSelectedItem("");
-      dtpStart.setValue("");
-      dtpEnd.setValue("");
+          var calendarDropDown = this.getView().byId('calendarComboBox');
+          var dtpStart = this.getView().byId('DTP1');
+          var dtpEnd = this.getView().byId('DTP2');
+          calendarDropDown.setSelectedItem("");
+          dtpStart.setValue("");
+          dtpEnd.setValue("");
+          this.getView().byId('calendarSelectionPanel').setVisible(false);
           this._wizard.discardProgress(this._wizard.getSteps()[0]);
 
       }
@@ -40,10 +41,10 @@ sap.ui.define([
 		set365StatusText: function () {
 			signedInO365 = (localStorage.getItem('msal.idtoken') !== null);
 			if (!signedInO365) {
-				//this.getView().byId('signButtonO365').setText('Sign In to O365');
+				//this.getView().byId('signButton').setText('Sign In to O365');
 				this.getView().byId('configLabelO365').setText('Signed Out of O365!');
 			} else {
-				//this.getView().byId('signButtonO365').setText('Sign Out of O365');
+				//this.getView().byId('signButton').setText('Sign Out of O365');
 				this.getView().byId('configLabelO365').setText('Connected to O365!');
 			}
 		},
@@ -63,7 +64,7 @@ sap.ui.define([
 
 		afterLogin: function () {
 			this.getView().byId('signButton').setEnabled(true);
-			this.getView().byId('configLabel').setText('Connected to Google! Now click Sign In.');
+			this.getView().byId('configLabel').setText('Connected to Google!');
 		},
 
     onSignIn: function(event) {
@@ -89,6 +90,7 @@ sap.ui.define([
 		onSignInOutO365Press: function (event) {
 			if (signedInO365) {
 				O365CalendarService.signOut(this);
+        this.getView().byId('signButton').setText('Sign In to O365');
 				this.set365StatusText();
 			} else {
 				O365CalendarService.signIn(this);
@@ -101,8 +103,23 @@ sap.ui.define([
         // if so, go right to getting the calendars
         if (!isGoogle && signedInO365)
         {
-              this.set365StatusText();
+              this.set365StatusText();        
+              this.getView().byId('signButton').setText('Sign Out of O365');
               O365CalendarService.getCalendars(this.setCalendarDropDownEvents.bind(this));
+        }
+        else if(!isGoogle){
+              this.getView().byId('signButton').setText('Sign In to O365');
+        }
+        else if (!signedInGoogle) {
+          // clear the calendar selection
+          // set the button to login
+          this.getView().byId('signButton').setText('Sign In to Google');
+        }
+        else {
+
+          this.getView().byId('signButton').setText('Sign Out of Google');
+          GoogleCalendarService.getCalendars(this.setCalendarDropDownEvents.bind(this));
+          this.getView().byId('calendarSelectionPanel').setVisible(true);
         }
 
     },
@@ -195,12 +212,12 @@ sap.ui.define([
            // GoogleCalendarService.parseListOfEvents(events, me);
           });  
       }
-      if (!this.getView().byId("goButton").getVisible())
-      {
+      // if (!this.getView().byId("goButton").getVisible())
+      // {
         this.getView().byId('changeChartType').setVisible(true);
         this.getView().byId("goButton").setVisible(true);
         this.byId("showChart").fireComplete();
-      }
+      // }
       this._wizard.goToStep(this.getView().byId("showChart"));
 
 		},
@@ -218,7 +235,7 @@ sap.ui.define([
         listModel.setData(parsedEvents);
         me.getView().byId('eventsTable').setModel(listModel);
         me.getView().byId('eventsTable').setVisible(true);
-        me.getView().byId('configLabel').setText('Analyzed time!  Scroll down to see a visual representation');
+       // me.getView().byId('configLabel').setText('Analyzed time!  Scroll down to see a visual representation');
         me.isColumnChart = !(me.isColumnChart);
       });
     },

@@ -70,7 +70,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 		gapi.auth2.getAuthInstance().signOut();
 		event.getView().byId('calendarComboBox').setEnabled(false);
 		event.getView().byId('signButton').setText('Sign Into Google');
-		event.getView().byId('configLabel').setText('Connected to Google! Now click Sign into Google');
+		event.getView().byId('configLabel').setText('Connected to Google!');
 	};
 
 	// Function to connect to Google Calendars
@@ -102,7 +102,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 	};
 
 	Utils.setItemsAfterLogin = function (controller) {
-		controller.getView().byId('configLabel').setText('Connected to Google! Now click Sign In.');
+		controller.getView().byId('configLabel').setText('Connected to Google!');
 		controller.getView().byId('signButton').setEnabled(true);
 		controller.getView().byId('signButton').setBusy(false);
 	};

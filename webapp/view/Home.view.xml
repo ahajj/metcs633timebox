@@ -9,12 +9,10 @@
 	<!-- <pages> -->
 		<Page
 			id="page"
-			title="{i18n>title}"
-			class="sapUiResponsiveContentPadding">
+			title="{i18n>title}">
 			<content>
 
-				<Wizard id="CreateProductWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content"
-					complete="wizardCompletedHandler">
+				<Wizard id="CreateProductWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content">
 					<WizardStep id="googleOrOutlookStep"
 								title="Choose Source"
 								complete="chooseStepCompleted"
@@ -29,12 +27,12 @@
 								width="320px"
 								selectionChange="setCalendarTypeFromButton">
 								<items>
-									<SegmentedButtonItem icon="sap-icon://iphone" text="Google"/>
-									<SegmentedButtonItem icon="sap-icon://sys-monitor" text="o365"/>
+									<SegmentedButtonItem icon="sap-icon://appointment" text="Google"/>
+									<SegmentedButtonItem icon="sap-icon://appointment-2" text="o365"/>
 								</items>
 							</SegmentedButton>
 						</HBox>
-						<HBox>
+						<HBox class="sapUiSmallMarginBeginEnd">
 							<VBox>
 
 								<Label
@@ -46,13 +44,8 @@
 									class="sapUiSmallMarginTop"
 									text="Not connected to Google...">
 								</Label>
-							</VBox>
-							<VBox class="sapUiSmallMarginTop sapUiSmalllMarginBegin">
-							 <Label
-								text="Status O365:"></Label>
 				                <Label 
 								id="configLabelO365"
-								class="sapUiSmallMarginTop"
 								text="Not connected to O365..."></Label>
 							</VBox>
 						</HBox>
@@ -146,9 +139,8 @@
 						</Panel>
 					</WizardStep>
 					<WizardStep id="showTable"
-						activate="pricingActivate"
-						complete="pricingComplete"
-						validated="true"
+						validated="false"
+						showNextButton="false"
 						title="Events">
 						<Table
 							id="eventsTable"
