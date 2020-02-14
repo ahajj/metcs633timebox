@@ -110,7 +110,7 @@ sap.ui.define([],
 						Authorization: 'Bearer ' + token.accessToken
 					},
 
-					url: `${config.graphBaseEndpoint}/me/calendars`,
+					url: `${config.graphBaseEndpoint}me/calendars`,
 
 					type: 'GET'
 				}).then(function (res) {
@@ -130,7 +130,7 @@ sap.ui.define([],
 					headers: {
 						Authorization: 'Bearer ' + token.accessToken
 					},
-					url: `${config.graphBaseEndpoint}/me/calendars/${id}`,
+					url: `${config.graphBaseEndpoint}me/calendars/${id}`,
 					type: 'GET'
 				}).then(function (res) {
 					console.log('getCalendars', res);
@@ -158,7 +158,7 @@ sap.ui.define([],
 
 			var apiUrl = '';
 			if (calendarId && calendarId.length > 0) {
-				apiUrl = `/me/calendars/${calendarId}/calendarView?startDateTime=${start.toISOString()}'&endDateTime=${end.toISOString()}`;
+				apiUrl = `me/calendars/${calendarId}/calendarView?startDateTime=${start.toISOString()}'&endDateTime=${end.toISOString()}`;
 			} else {
 				apiUrl = `/me/calendar/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
 			}
@@ -201,7 +201,7 @@ sap.ui.define([],
 
 			var apiUrl = '';
 			if (calendarId && calendarId.length > 0) {
-				apiUrl = `/me/calendars/${calendarId}/calendarView?startDateTime=${start.toISOString()}'&endDateTime=${end.toISOString()}`;
+				apiUrl = `me/calendars/${calendarId}/calendarView?startDateTime=${start.toISOString()}'&endDateTime=${end.toISOString()}`;
 			} else {
 				apiUrl = `/me/calendar/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
 			}
@@ -256,7 +256,7 @@ sap.ui.define([],
 
 			var apiUrl = '';
 			if (calendarId && calendarId.length > 0) {
-				apiUrl = `/me/calendars/${calendarId}/calendarView?startDateTime=${start.toISOString()}'&endDateTime=${end.toISOString()}`;
+				apiUrl = `me/calendars/${calendarId}/calendarView?startDateTime=${start.toISOString()}'&endDateTime=${end.toISOString()}`;
 			} else {
 				apiUrl = `/me/calendar/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
 			}
