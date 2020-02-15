@@ -10,7 +10,7 @@
 		<Page
 			id="page">
 			<headerContent>
-				<Image src="Images/logo_transparent.png" activeSrc="/webapp">
+				<Image src="images/logo_transparent.png" activeSrc="/webapp">
 				</Image>
 			</headerContent>
 			<content>
