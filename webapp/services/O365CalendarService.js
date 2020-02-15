@@ -30,7 +30,8 @@ sap.ui.define([],
 				auth: {
 					clientId: APP_ID,
 					//redirectUri: "http://localhost:8000/webapp", //defaults to application start page
-					postLogoutRedirectUri: 'http://localhost:8000/webapp'
+					//postLogoutRedirectUri: 'http://localhost:8000/webapp',
+					postLogoutRedirectUri: 'https://timeboxtool.com/webapp/index.html'
 				},
 				cache: {
 					cacheLocation: 'localStorage',
