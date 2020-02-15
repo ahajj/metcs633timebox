@@ -19,7 +19,7 @@ sap.ui.define([],
 			onClose: null,                   // default
 			autoClose: true,                 // default
 			animationTimingFunction: "ease", // default
-			animationDuration: 2000,         // default
+			animationDuration: 3000,         // default
 			closeOnBrowserNavigation: true   // default
 		};
 
@@ -44,6 +44,10 @@ sap.ui.define([],
 			}
 		};
 		// #region Helpers
+		function sendToastMessage(message) {
+			sap.m.MessageToast.show(message, toastOptions);
+		}
+
 		function handleAuthError(error) {
 			console.log(error);
 		}
@@ -123,6 +127,7 @@ sap.ui.define([],
 		Utils.getCalendars = function (callback) {
 			getMSGraphClient().acquireTokenSilent(config.scopeConfig).then(function (token) {
 				// eslint-disable-next-line no-undef
+				sendToastMessage(`This may take a few seconds. ${'\n'} Please wait...`);
 				$.ajax({
 					headers: {
 						Authorization: 'Bearer ' + token.accessToken
@@ -144,6 +149,7 @@ sap.ui.define([],
 		Utils.getCalendarById = function (id) {
 			getMSGraphClient().acquireTokenSilent(config.scopeConfig).then(function (token) {
 				// eslint-disable-next-line no-undef
+				sendToastMessage(`This may take a few seconds. ${'\n'} Please wait...`);
 				$.ajax({
 					headers: {
 						Authorization: 'Bearer ' + token.accessToken
@@ -181,6 +187,7 @@ sap.ui.define([],
 				apiUrl = `/me/calendar/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
 			}
 			getMSGraphClient().acquireTokenSilent(config.scopeConfig).then(function (token) {
+				sendToastMessage(`This may take a few seconds. ${'\n'} Please wait...`);
 				$.ajax({
 					headers: {
 						Authorization: 'Bearer ' + token.accessToken
@@ -224,6 +231,8 @@ sap.ui.define([],
 				apiUrl = `/me/calendar/calendarView?startDateTime=${start.toISOString()}&endDateTime=${end.toISOString()}`;
 			}
 			getMSGraphClient().acquireTokenSilent(config.scopeConfig).then(function (token) {
+				
+				sendToastMessage(`This may take a few seconds. ${'\n'} Please wait...`);
 				$.ajax({
 					headers: {
 						Authorization: 'Bearer ' + token.accessToken
@@ -282,6 +291,7 @@ sap.ui.define([],
 
 				// first get a count of events
 				// then select all of those events
+				sendToastMessage(`This may take a few seconds. ${'\n'} Please wait...`);
 				$.ajax({
 					headers: {
 						Authorization: 'Bearer ' + token.accessToken

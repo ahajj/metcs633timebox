@@ -19,7 +19,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 		onClose: null,                   // default
 		autoClose: true,                 // default
 		animationTimingFunction: "ease", // default
-		animationDuration: 2000,         // default
+		animationDuration: 3000,         // default
 		closeOnBrowserNavigation: true   // default
 	};
 
