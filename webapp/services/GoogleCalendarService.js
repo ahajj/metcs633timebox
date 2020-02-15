@@ -8,6 +8,21 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 
 	var Utils = {};
 
+	var toastOptions = {
+		duration: 2000,                  // default
+		width: "15em",                   // default
+		my: "center top",             // default
+		at: "center top",             // default
+		of: window,                      // default
+		offset: "0 0",                   // default
+		collision: "fit fit",            // default
+		onClose: null,                   // default
+		autoClose: true,                 // default
+		animationTimingFunction: "ease", // default
+		animationDuration: 2000,         // default
+		closeOnBrowserNavigation: true   // default
+	};
+
 	// Client ID from the Developer Console
 	var CLIENT_ID = '782211928709-49gkv11kmh5mji6m79rs9df57ba3u6pv.apps.googleusercontent.com';
 
@@ -59,9 +74,10 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 	Utils.signIn = function (event) {
 		gapi.auth2.getAuthInstance().signIn();
 		event.getView().byId('signButton').setText('Sign Out of Google');
-		event.getView().byId('configLabel').setText('Connected to Google!');
+		//event.getView().byId('configLabel').setText('Connected to Google!');
+		sap.m.MessageToast.show('Connected to Google!', toastOptions);
 		// get the list of calendars and pass in the combobox so it can filled		// first turn on the busy indicator
-		
+
 		this.getCalendars(event.setCalendarDropDownEvents.bind(event));
 	};
 
@@ -70,7 +86,8 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 		gapi.auth2.getAuthInstance().signOut();
 		event.getView().byId('calendarComboBox').setEnabled(false);
 		event.getView().byId('signButton').setText('Sign Into Google');
-		event.getView().byId('configLabel').setText('Connected to Google!');
+		//event.getView().byId('configLabel').setText('Connected to Google!');
+		sap.m.MessageToast.show('Connected to Google!', toastOptions);
 	};
 
 	// Function to connect to Google Calendars
@@ -102,7 +119,9 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 	};
 
 	Utils.setItemsAfterLogin = function (controller) {
-		controller.getView().byId('configLabel').setText('Connected to Google!');
+		//controller.getView().byId('configLabel').setText('Connected to Google!');
+		sap.m.MessageToast.show('Connected to Google!', toastOptions);
+
 		controller.getView().byId('signButton').setEnabled(true);
 		controller.getView().byId('signButton').setBusy(false);
 	};

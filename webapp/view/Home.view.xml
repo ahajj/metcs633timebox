@@ -10,7 +10,7 @@
 		<Page
 			id="page">
 			<headerContent>
-				<Image src="Images/logo_transparent.png">
+				<Image src="Images/logo_transparent.png" activeSrc="/webapp">
 				</Image>
 			</headerContent>
 			<content>
@@ -35,7 +35,7 @@
 								</items>
 							</SegmentedButton>
 						</HBox>
-						<HBox class="sapUiSmallMarginBeginEnd">
+						<!-- <HBox class="sapUiSmallMarginBeginEnd statusHBox">
 							<VBox>
 
 								<Label
@@ -51,7 +51,7 @@
 								id="configLabelO365"
 								text="Not connected to O365..."></Label>
 							</VBox>
-						</HBox>
+						</HBox> -->
 					</WizardStep>
 					<WizardStep id="signInAndChooseCalendarStep"
 									validated="false"

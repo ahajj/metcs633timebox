@@ -7,7 +7,7 @@ sap.ui.define('com/metcs633/services/GoogleChartService', [
 
 	var Utils = {};
 
-	Utils.drawChart = function (catData, controller, callback = function () { }) {
+	Utils.drawChart = function (catData, controller, callback) {
 		// Create the data table.
 		var data = new google.visualization.DataTable();
 		data.addColumn('string', 'Event');
