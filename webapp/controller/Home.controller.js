@@ -138,8 +138,7 @@ sap.ui.define([
 
     },
 
-    setCalendarDropDownEvents(events) {
-
+    setCalendarDropDownEvents: function (events) {
 
       var calendarDropDown = this.getView().byId('calendarComboBox');
       var statusLabel = this.getView().byId('configLabel');
@@ -151,7 +150,7 @@ sap.ui.define([
       calendarDropDown.setModel(listModel);
       this.getView().byId('calendarSelectionPanel').setVisible(true);
       calendarDropDown.setBusy(false);
-     // statusLabel.setText('Loaded calendars!');
+      // statusLabel.setText('Loaded calendars!');
       sap.m.MessageToast.show('Loaded calendars!', toastOptions);
     },
     onGetCalendarsPress: function (event) {
