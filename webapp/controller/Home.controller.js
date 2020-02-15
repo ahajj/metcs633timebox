@@ -115,6 +115,7 @@ sap.ui.define([
       // We don't keep the cookies for Google, but we do for outlook
       // if this if coming from step 1 then check if the user is signed in
       // if so, go right to getting the calendars
+      signedInO365 = (localStorage.getItem('msal.idtoken') !== null);
       if (!isGoogle && signedInO365) {
         this.set365StatusText();
         this.getView().byId('signButton').setText('Sign Out of O365');
