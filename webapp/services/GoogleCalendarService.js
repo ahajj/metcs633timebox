@@ -19,7 +19,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 		onClose: null,                   // default
 		autoClose: true,                 // default
 		animationTimingFunction: "ease", // default
-		animationDuration: 2000,         // default
+		animationDuration: 3000,         // default
 		closeOnBrowserNavigation: true   // default
 	};
 
@@ -68,6 +68,18 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 		'Chores': [
 			'cleaning', 'clean', 'tidy', 'vacuum'
 		]
+	};
+
+	function getDateString(dateIn) {
+		dateIn = new Date(dateIn);
+		var dateString =
+			dateIn.getFullYear() + "/" +
+			("0" + (dateIn.getMonth() + 1)).slice(-2) + "/" +
+			("0" + dateIn.getDate()).slice(-2) + " " +
+			("0" + dateIn.getHours()).slice(-2) + ":" +
+			("0" + dateIn.getMinutes()).slice(-2) + ":" +
+			("0" + dateIn.getSeconds()).slice(-2);
+		return dateString;
 	};
 
 	// Function to authenticate the user and choose the Google Account
@@ -251,7 +263,6 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 			return listOfCategories;
 		},
 
-
 		Utils.parseListOfEvents = function (events, callback) {
 			var parsedEvents = [];
 
@@ -277,7 +288,8 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 
 				// now get the time difference in hours between the start time and the end time
 				parsedEvent.time = Math.ceil(Math.abs(parsedEvent.endTime - parsedEvent.startTime) / (1000 * 60 * 60));
-
+				parsedEvent.startTimeString = getDateString(startTime);
+				parsedEvent.endTimeString = getDateString(endTime);
 				// if time is NaN that is problem
 				if (isNaN(parsedEvent.time)) {
 					console.log(isNan(event));
