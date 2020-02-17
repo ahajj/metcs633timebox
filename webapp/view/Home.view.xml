@@ -61,15 +61,28 @@
 						<VBox>
 							<Text class="sapUiSmallMarginBottom"
 								text="Next, login, choose a calendar and select a date range"/>
-							<Button 
-								id="signButton"
-								text="Sign in"
-								enabled="false"
-								busyIndicatorDelay="0"
-								busy="true"
-								press="onSignIn"
-								class="sapUiSmallMarginEnd">
-							</Button>
+							<FlexBox
+								alignItems="Start"
+								justifyContent="SpaceBetween">
+								<items>
+									<Button 
+										id="signButton"
+										text="Sign in"
+										enabled="false"
+										busyIndicatorDelay="0"
+										busy="true"
+										press="onSignIn"
+										class="sapUiSmallMarginEnd">
+									</Button>
+									<Button 
+										id="resetButton"
+										icon="sap-icon://reset"
+										text="Reset"
+										press="resetToStepOne"
+										class="sapUiMeduimMarginBegin">
+									</Button>
+								</items>
+							</FlexBox>
 						</VBox>
 						<Panel
 							id="calendarSelectionPanel"
