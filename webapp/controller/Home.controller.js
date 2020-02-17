@@ -38,6 +38,11 @@ sap.ui.define([
 
       // if it goes in here that means we need to reset all the things
       if (this._wizard.getProgress() > 1) {
+          this.resetToStepOne();
+      }
+    },
+
+    resetToStepOne:function(event) {
         var calendarDropDown = this.getView().byId('calendarComboBox');
         var dtpStart = this.getView().byId('DTP1');
         var dtpEnd = this.getView().byId('DTP2');
@@ -46,7 +51,6 @@ sap.ui.define([
         dtpEnd.setValue("");
         this.getView().byId('calendarSelectionPanel').setVisible(false);
         this._wizard.discardProgress(this._wizard.getSteps()[0]);
-      }
     },
 
     set365StatusText: function () {
@@ -94,6 +98,7 @@ sap.ui.define([
     onSignInOutGooglePress: function (event) {
       if (signedInGoogle) {
         GoogleCalendarService.signOut(this);
+        //location.reload();
       } else {   // first turn on the busy indicator
         this.getView().byId('calendarComboBox').setBusy(true);
         GoogleCalendarService.signIn(this);
