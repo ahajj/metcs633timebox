@@ -75,10 +75,7 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 		var dateString =
 			dateIn.getFullYear() + "/" +
 			("0" + (dateIn.getMonth() + 1)).slice(-2) + "/" +
-			("0" + dateIn.getDate()).slice(-2) + " " +
-			("0" + dateIn.getHours()).slice(-2) + ":" +
-			("0" + dateIn.getMinutes()).slice(-2) + ":" +
-			("0" + dateIn.getSeconds()).slice(-2);
+			("0" + dateIn.getDate()).slice(-2);
 		return dateString;
 	};
 
