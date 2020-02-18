@@ -122,6 +122,28 @@
 											class="sapUiSmallMarginBottom"/>
 									</VBox>
 								</HBox>
+								<Label
+									text="Or, select one of the following to pre-fill the Start and End Dates">
+								</Label>
+								<HBox>	
+									<Button
+										id="weekButton"
+										press="setDatesFromButton"
+										text="Week"
+										class="sapUiSmallMarginEnd">
+									</Button>
+									<Button
+										id="monthButton"
+										press="setDatesFromButton"
+										text="Month"
+										class="sapUiSmallMarginEnd">
+									</Button>
+									<Button
+										id="yearButton"
+										press="setDatesFromButton"
+										text="Year">
+									</Button>
+								</HBox>
 								<Button
 									id="goButton"
 									text="Get Events"

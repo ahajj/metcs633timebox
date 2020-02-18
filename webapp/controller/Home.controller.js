@@ -176,6 +176,23 @@ sap.ui.define([
 
     },
 
+    setDatesFromButton: function(event) {
+      var dtpStart = this.getView().byId('DTP1');
+      var dtpEnd = this.getView().byId('DTP2');
+
+      var text = event.getSource().getProperty("text")
+      var today = new Date();
+
+      var dStart = moment().startOf(text.toLowerCase()).toDate();
+      var dEnd = moment().endOf(text.toLowerCase()).toDate();
+
+      dtpStart.setDateValue(dStart);
+      dtpEnd.setDateValue(dEnd);
+
+      this.validateCalendarStartEndDate();
+      
+    },
+
     validateCalendarStartEndDate: function (event) {
       // only enable the Go button if
       // A calendar is selected, a start date and an end date are selected
