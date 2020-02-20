@@ -293,8 +293,18 @@ sap.ui.define([
         pdf.setFontSize(12);  
         pdf.text(306,95,startTime + ' - ' + endTime, 'center');
 
-        // add in the chart
-        pdf.addImage(chart.getImageURI(), 10, 120);
+        // chart will look a little grainy on mobile
+        var w = 600;
+        var h = 600;
+        var startX = 10;
+        var startY = 120;
+        if (sap.ui.Device.system.phone) {
+          w = 350;
+          h = 350;
+          startX = 135;
+          startY=245;
+        }
+        pdf.addImage(chart.getImageURI(), startX, startY, w, h);
         pdf.setFontType('Bold');
         pdf.setFontSize(20); 
         pdf.text(306,150, 'Breakdown of Event Categories:', 'center');
