@@ -20,14 +20,15 @@ sap.ui.define('com/metcs633/services/GoogleChartService', [
 		var height = 800;
 
 		if (sap.ui.Device.system.phone) {
-			width = 200;
-			height = 200;
+			width = 350;
+			height = 350;
 		}
 
 		var options = {
 			'title': 'Hours per Category',
 			'width': width,
-			'height': height
+			'height': height,
+			'legend': { 'position':'bottom'}
 		};
 		var HBoxDomRef = controller.getView().byId('barChartPanel').getDomRef();
 		// Instantiate and draw our chart, passing in our HBox.

@@ -109,16 +109,24 @@
 							<Column width="12em">
 								<Text text="Event" />
 							</Column>
-							<Column demandPopin="true">
+							<Column 
+								minScreenWidth="Desktop"
+								demandPopin="true" >
 								<Text text="Category" />
 							</Column>
-							<Column demandPopin="true">
+							<Column 								
+								minScreenWidth="Desktop"
+								demandPopin="true" >
 								<Text text="Keyword" />
 							</Column>
-							<Column demandPopin="true">
+							<Column 								
+								minScreenWidth="Desktop"
+								demandPopin="true" >
 								<Text text="Date" />
 							</Column>
-							<Column demandPopin="true">
+							<Column 								
+								minScreenWidth="Desktop"
+								demandPopin="true" >
 								<Text text="Hours" />
 							</Column>
 						</columns>
