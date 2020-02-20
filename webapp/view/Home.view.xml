@@ -15,7 +15,7 @@
 			</headerContent>
 			<content>
 
-				<Wizard id="CreateProductWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content">
+				<Wizard id="CreateProductWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" finishButtonText="Generate PDF">
 					<WizardStep id="googleOrOutlookStep"
 								title="Choose Source"
 								complete="chooseStepCompleted"
@@ -55,7 +55,7 @@
 					</WizardStep>
 					<WizardStep id="signInAndChooseCalendarStep"
 									validated="false"
-									title="Sign and Choose Calendar"
+									title="Sign In and Choose Calendar"
 									complete="goButton"
 									activate="signInAndChoosseValidation">
 						<VBox>
@@ -110,6 +110,7 @@
 											placeholder="Enter Date ..."
 											change="handleStartDateChange"
 											required="true"
+											valueFormat="MM/dd/yyyy"
 											class="sapUiSmallMarginBottom"/>
 									</VBox>		
 									<VBox>
@@ -118,6 +119,7 @@
 											id="DTP2"
 											placeholder="Enter Date ..."
 											required="true"
+											valueFormat="MM/dd/yyyy"
 											change="handleEndDateChange"
 											class="sapUiSmallMarginBottom"/>
 									</VBox>
@@ -177,12 +179,13 @@
 						</Panel>
 					</WizardStep>
 					<WizardStep id="showTable"
-						validated="false"
-						showNextButton="false"
+						validated="true"
+						complete="generatePDF"
 						title="Events">
 						<Table
 							id="eventsTable"
 							inset="false"
+							growing="true"
 							visible="false"
 							items="{
 								path: '/',

@@ -54,7 +54,7 @@ sap.ui.define('com/metcs633/services/GoogleChartService', [
 		});
 
 		chart.draw(data, options);
-
+		controller.chart = chart;
 		callback();
 		controller._wizard.goToStep(controller.getView().byId("showChart"));
 	};
