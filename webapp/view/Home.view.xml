@@ -75,12 +75,12 @@
 							</HBox>
 							<Button id="goButton" text="Get Events" visible="false" press="goButton">
 							</Button>
-							<Button id="monthButton" press="setDatesFromButton" text="Month" class="sapUiSmallMarginEnd">
-							</Button>
-							<Button id="yearButton" press="setDatesFromButton" text="Year">
-							</Button>
-						</HBox>
-						<Button id="goButton" text="Get Events" visible="false" press="goButton">
+						</VBox>
+					</Panel>
+				</WizardStep>
+				<WizardStep id="showChart" activate="pricingActivate" complete="pricingComplete" validated="false" title="Chart">
+					<Panel>
+						<Button id="changeChartType" text="Change Chart" press="changeChart" visible="false">
 						</Button>
 						<FlexBox alignItems="Center" justifyContent="Center">
 							<items>
@@ -94,8 +94,7 @@
 					<Button id="resetButtonGrid" icon="sap-icon://reset" text="Reset Grid Filter" press="goButton" class="sapUiMeduimMarginBegin">
 					</Button>
 					<Table id="eventsTable" inset="false" growing="true" visible="false" items="{
-							</items>
-							path: '/',
+								path: '/',
 								sorter: [{
 									path: 'category'
 								}, 
@@ -135,7 +134,6 @@
 							</ColumnListItem>
 						</items>
 					</Table>
-
 				</WizardStep>
 			</Wizard>
 		</content>
