@@ -185,6 +185,7 @@
 						<Table
 							id="eventsTable"
 							inset="false"
+							growing="true"
 							visible="false"
 							items="{
 								path: '/',
