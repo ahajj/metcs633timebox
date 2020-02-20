@@ -81,22 +81,28 @@ sap.ui.define('com/metcs633/services/GoogleCalendarService', [
 
 	// Function to authenticate the user and choose the Google Account
 	Utils.signIn = function (event) {
-		gapi.auth2.getAuthInstance().signIn();
-		event.getView().byId('signButton').setText('Sign Out of Google');
-		//event.getView().byId('configLabel').setText('Connected to Google!');
-		sap.m.MessageToast.show('Connected to Google!', toastOptions);
-		// get the list of calendars and pass in the combobox so it can filled		// first turn on the busy indicator
+		var me = this;
+		gapi.auth2.getAuthInstance().signIn().then(function() {
+			event.getView().byId('signButton').setText('Sign Out of Google');
+			//event.getView().byId('configLabel').setText('Connected to Google!');
+			sap.m.MessageToast.show('Signed into to Google!', toastOptions);
+			// get the list of calendars and pass in the combobox so it can filled		// first turn on the busy indicator
 
-		this.getCalendars(event.setCalendarDropDownEvents.bind(event));
+			me.getCalendars(event.setCalendarDropDownEvents.bind(event));
+		});
+
 	};
 
 	// Function to signout of Google
 	Utils.signOut = function (event) {
-		gapi.auth2.getAuthInstance().signOut();
-		event.getView().byId('calendarComboBox').setEnabled(false);
+		gapi.auth2.getAuthInstance().signOut().then(function() {
+			event.resetToStepOne();
+			//window.location.replace("http://localhost:8000/webapp/");
+		});
+		//event.getView().byId('calendarComboBox').setEnabled(false);
 		event.getView().byId('signButton').setText('Sign Into Google');
 		//event.getView().byId('configLabel').setText('Connected to Google!');
-		sap.m.MessageToast.show('Connected to Google!', toastOptions);
+		sap.m.MessageToast.show('Signed out of Google!', toastOptions);
 	};
 
 	// Function to connect to Google Calendars

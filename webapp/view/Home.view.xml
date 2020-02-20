@@ -1,155 +1,99 @@
-<mvc:View
-	controllerName="com.metcs633.controller.Home"
-	displayBlock="true"
-	xmlns="sap.m"
-	xmlns:mvc="sap.ui.core.mvc"
-	xmlns:l="sap.ui.layout"		
+<mvc:View controllerName="com.metcs633.controller.Home" displayBlock="true" 
+	xmlns="sap.m" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns:l="sap.ui.layout" 
 	xmlns:core="sap.ui.core">
 	<!-- <NavContainer id="wizardNavContainer"> -->
 	<!-- <pages> -->
-		<Page
-			id="page">
-			<headerContent>
-				<Image src="images/logo_transparent.png" activeSrc="/webapp">
-				</Image>
-			</headerContent>
-			<content>
+	<Page id="page">
+		<headerContent>
+			<Image src="images/logo_transparent.png" activeSrc="/webapp">
+			</Image>
+		</headerContent>
+		<content>
 
-				<Wizard id="CreateProductWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content">
-					<WizardStep id="googleOrOutlookStep"
-								title="Choose Source"
-								complete="chooseStepCompleted"
-								validated="true">
-						<Text class="sapUiSmallMarginBottom"
-								text="Welcome to the Timebox Tool! The first step is to choose Google or o365.  Click one below to continue."/>
-						<HBox
-								alignItems="Center"
-								justifyContent="Center"
-								width="100%">
-							<SegmentedButton
-								width="320px"
-								selectionChange="setCalendarTypeFromButton">
-								<items>
-									<SegmentedButtonItem icon="sap-icon://appointment" text="Google"/>
-									<SegmentedButtonItem icon="sap-icon://appointment-2" text="o365"/>
-								</items>
-							</SegmentedButton>
-						</HBox>
-						<!-- <HBox class="sapUiSmallMarginBeginEnd statusHBox">
-							<VBox>
-
-								<Label
-									class="sapUiSmallMarginTop sapUiSmallMarginEnd"
-									text="Status:">
+			<Wizard id="CreateProductWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" finishButtonText="Generate PDF">
+				<WizardStep id="googleOrOutlookStep" title="Choose Source" complete="chooseStepCompleted" validated="true">
+					<Text class="sapUiSmallMarginBottom" text="Welcome to the Timebox Tool! The first step is to choose Google or o365.  Click one below to continue."/>
+					<HBox alignItems="Center" justifyContent="Center" width="100%">
+						<SegmentedButton width="320px" selectionChange="setCalendarTypeFromButton">
+							<items>
+								<SegmentedButtonItem icon="sap-icon://appointment" text="Google"/>
+								<SegmentedButtonItem icon="sap-icon://appointment-2" text="o365"/>
+							</items>
+						</SegmentedButton>
+					</HBox>
+					<!-- <HBox class="sapUiSmallMarginBeginEnd statusHBox">
+							<VBox> <Label class="sapUiSmallMarginTop sapUiSmallMarginEnd" text="Status:">
 								</Label>
-								<Label 
-									id="configLabel"
-									class="sapUiSmallMarginTop"
-									text="Not connected to Google...">
+								<Label id="configLabel" class="sapUiSmallMarginTop" text="Not connected to Google...">
 								</Label>
-				                <Label 
-								id="configLabelO365"
-								text="Not connected to O365..."></Label>
+				                <Label id="configLabelO365" text="Not connected to O365..."></Label>
 							</VBox>
 						</HBox> -->
-					</WizardStep>
-					<WizardStep id="signInAndChooseCalendarStep"
-									validated="false"
-									title="Sign and Choose Calendar"
-									complete="goButton"
-									activate="signInAndChoosseValidation">
-						<VBox>
-							<Text class="sapUiSmallMarginBottom"
-								text="Next, login, choose a calendar and select a date range"/>
-							<Button 
-								id="signButton"
-								text="Sign in"
-								enabled="false"
-								busyIndicatorDelay="0"
-								busy="true"
-								press="onSignIn"
-								class="sapUiSmallMarginEnd">
+				</WizardStep>
+				<WizardStep id="signInAndChooseCalendarStep" validated="false" title="Sign In and Choose Calendar" complete="goButton" activate="signInAndChoosseValidation">
+					<VBox>
+						<Text class="sapUiSmallMarginBottom" text="Next, login, choose a calendar and select a date range"/>
+						<FlexBox alignItems="Start" justifyContent="SpaceBetween">
+							<items>
+								<Button id="signButton" text="Sign in" enabled="false" busyIndicatorDelay="0" busy="true" press="onSignIn" class="sapUiSmallMarginEnd">
+								</Button>
+								<Button id="resetButton" icon="sap-icon://reset" text="Reset" press="resetToStepOne" class="sapUiMeduimMarginBegin">
+								</Button>
+							</items>
+						</FlexBox>
+					</VBox>
+					<Panel id="calendarSelectionPanel" visible="false">
+						<VBox class = "sapUiSmallMarginTopBottom">
+
+							<Label text="Choose a Calendar: " labelFor="calendarComboBox"/>
+							<ComboBox placeholder="Choose a Calendar" id="calendarComboBox" busyIndicatorDelay="0" items="{
+										path: '/'
+									}" class="sapUiTinyMarginEnd" required="true" selectionChange="calendarSelectionChange">
+								<core:Item key="{id}" text="{name}" />
+							</ComboBox>
+							<HBox>
+								<VBox class = "sapUiSmallMarginEnd">
+									<Label text="Choose a start date: " labelFor="DTP1"/>
+									<DatePicker id="DTP1" placeholder="Enter Date ..." change="handleStartDateChange" required="true" valueFormat="MM/dd/yyyy" class="sapUiSmallMarginBottom"/>
+								</VBox>
+								<VBox>
+									<Label text="Choose an end date: " labelFor="DTP2"/>
+									<DatePicker id="DTP2" placeholder="Enter Date ..." required="true" valueFormat="MM/dd/yyyy" change="handleEndDateChange" class="sapUiSmallMarginBottom"/>
+								</VBox>
+							</HBox>
+							<Label text="Or, select one of the following to pre-fill the Start and End Dates">
+							</Label>
+							<HBox>
+								<Button id="weekButton" press="setDatesFromButton" text="Week" class="sapUiSmallMarginEnd">
+								</Button>
+								<Button id="monthButton" press="setDatesFromButton" text="Month" class="sapUiSmallMarginEnd">
+								</Button>
+								<Button id="yearButton" press="setDatesFromButton" text="Year">
+								</Button>
+							</HBox>
+							<Button id="goButton" text="Get Events" visible="false" press="goButton">
 							</Button>
 						</VBox>
-						<Panel
-							id="calendarSelectionPanel"
-							visible="false">
-							<VBox class = "sapUiSmallMarginTopBottom">
-
-								<Label text="Choose a Calendar: " labelFor="calendarComboBox"/>
-								<ComboBox
-									placeholder="Choose a Calendar"
-									id="calendarComboBox"
-									busyIndicatorDelay="0"
-									items="{
-										path: '/'
-									}"
-									class="sapUiTinyMarginEnd"
-									required="true"
-									selectionChange="calendarSelectionChange">
-									<core:Item key="{id}" text="{name}" />
-								</ComboBox>
-								<HBox>	
-									<VBox class = "sapUiSmallMarginEnd">
-										<Label text="Choose a start date: " labelFor="DTP1"/>
-										<DatePicker
-											id="DTP1"
-											placeholder="Enter Date ..."
-											change="handleStartDateChange"
-											required="true"
-											class="sapUiSmallMarginBottom"/>
-									</VBox>		
-									<VBox>
-										<Label text="Choose an end date: " labelFor="DTP2"/>
-										<DatePicker
-											id="DTP2"
-											placeholder="Enter Date ..."
-											required="true"
-											change="handleEndDateChange"
-											class="sapUiSmallMarginBottom"/>
-									</VBox>
-								</HBox>
-								<Button
-									id="goButton"
-									text="Get Events"
-									visible="false"
-									press="goButton">
-								</Button>
-							</VBox>
-						</Panel>
-					</WizardStep>
-					<WizardStep id="showChart"
-								activate="pricingActivate"
-								complete="pricingComplete"
-								validated="false"
-								title="Chart">
-						<Panel>
-							<Button
-								id="changeChartType"
-								text="Change Chart"
-								press="changeChart"
-								visible="false">
-							</Button>
-							<FlexBox
-								alignItems="Center"
-								justifyContent="Center">
-								<items>
-									<Panel
-										id="barChartPanel">
-									</Panel>
-								</items>
-							</FlexBox>
-						</Panel>
-					</WizardStep>
-					<WizardStep id="showTable"
-						validated="false"
-						showNextButton="false"
-						title="Events">
-						<Table
-							id="eventsTable"
-							inset="false"
-							visible="false"
-							items="{
+					</Panel>
+				</WizardStep>
+				<WizardStep id="showChart" activate="pricingActivate" complete="pricingComplete" validated="false" title="Chart">
+					<Panel>
+						<Button id="changeChartType" text="Change Chart" press="changeChart" visible="false">
+						</Button>
+						<FlexBox alignItems="Center" justifyContent="Center">
+							<items>
+								<Panel id="barChartPanel">
+								</Panel>
+							</items>
+						</FlexBox>
+					</Panel>
+				</WizardStep>
+				<WizardStep id="showTable" validated="true" complete="generatePDF" title="Events">
+					<Button id="resetButtonGrid" icon="sap-icon://reset" text="Reset Grid Filter" press="goButton" class="sapUiMeduimMarginBegin">
+					</Button>
+					<Table id="eventsTable" inset="false" growing="true" visible="false" items="{
 								path: '/',
 								sorter: [{
 									path: 'category'
@@ -161,49 +105,39 @@
 									path: 'keyword'
 								}]
 							}">
-							<columns>
-								<Column
-									width="12em">
-									<Text text="Event" />
-								</Column>
-								<Column
-									demandPopin="true">
-									<Text text="Category" />
-								</Column>
-								<Column
-									demandPopin="true">
-									<Text text="Keyword" />
-								</Column>
-								<Column
-									demandPopin="true">
-									<Text text="Date" />
-								</Column>
-								<Column
-									demandPopin="true">
-									<Text text="Hours" />
-								</Column>
-							</columns>
-							<items>
-								<ColumnListItem>
-									<cells>
-										<Text
-											text="{name}"/>
-										<Text
-											text="{category}" />
-										<Text
-											text="{keyword}" />
-										<Text
-											text="{startTimeString}" />
-										<Text
-											text="{time}" />
-									</cells>
-								</ColumnListItem>
-							</items>
-						</Table>
-					</WizardStep>
-				</Wizard>
-			</content>
-		</Page>
-			<!-- </pages>
+						<columns>
+							<Column width="12em">
+								<Text text="Event" />
+							</Column>
+							<Column demandPopin="true">
+								<Text text="Category" />
+							</Column>
+							<Column demandPopin="true">
+								<Text text="Keyword" />
+							</Column>
+							<Column demandPopin="true">
+								<Text text="Date" />
+							</Column>
+							<Column demandPopin="true">
+								<Text text="Hours" />
+							</Column>
+						</columns>
+						<items>
+							<ColumnListItem>
+								<cells>
+									<Text text="{name}"/>
+									<Text text="{category}" />
+									<Text text="{keyword}" />
+									<Text text="{startTimeString}" />
+									<Text text="{time}" />
+								</cells>
+							</ColumnListItem>
+						</items>
+					</Table>
+				</WizardStep>
+			</Wizard>
+		</content>
+	</Page>
+	<!-- </pages>
 		</NavContainer> -->
 </mvc:View>

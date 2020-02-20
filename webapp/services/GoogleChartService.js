@@ -9,6 +9,7 @@ sap.ui.define('com/metcs633/services/GoogleChartService', [
 
 	Utils.drawChart = function (catData, controller, callback) {
 		// Create the data table.
+		var eventDataHolder = [];
 		var data = new google.visualization.DataTable();
 		data.addColumn('string', 'Event');
 		data.addColumn('number', 'Hours');
@@ -40,11 +41,13 @@ sap.ui.define('com/metcs633/services/GoogleChartService', [
 		google.visualization.events.addListener(chart, 'ready', function () {
 			google.visualization.events.addListener(chart, 'select', function () {
 				// grab a few details before redirecting
-				var events = controller.parsedEvents;
-				var pickedEvents = events.filter(e =>
+				console.log('eventDataHolder', eventDataHolder);
+				if (eventDataHolder.length === 0) {
+					eventDataHolder = controller.parsedEvents;
+				}
+				var pickedEvents = eventDataHolder.filter(e =>
 					e.category === data.getValue(chart.getSelection()[0].row, 0)
 				);
-
 				// now we get the filtered events and show it in the table
 				var listModel = new sap.ui.model.json.JSONModel();
 				listModel.setData(pickedEvents);
@@ -54,7 +57,7 @@ sap.ui.define('com/metcs633/services/GoogleChartService', [
 		});
 
 		chart.draw(data, options);
-
+		controller.chart = chart;
 		callback();
 		controller._wizard.goToStep(controller.getView().byId("showChart"));
 	};
