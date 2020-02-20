@@ -12,6 +12,7 @@ sap.ui.define([
   var signedInGoogle = false;
   var signedInO365 = false;
   var isGoogle = true;
+  var selectedCalendarName = '';
   var toastOptions = {
     duration: 2000,                  // default
     width: "15em",                   // default
@@ -255,6 +256,91 @@ sap.ui.define([
       this._wizard.goToStep(this.getView().byId("showChart"));
 
     },
+    generatePDF: function(event) {
+
+      var chart = this.chart;      
+      var dtpStart = this.getView().byId('DTP1');
+      var dtpEnd = this.getView().byId('DTP2');
+      // then we need the start date time
+      var startTime = dtpStart.getValue();
+
+      // then we need the end date date
+      var endTime = dtpEnd.getValue();
+        // create the PDF Doc
+
+      var pdf = new jsPDF('p', 'pt', 'letter');
+
+        var margins = {
+            top: 50,
+            bottom: 60,
+            left: 40,
+            width: 522
+        };
+
+        // add in the title
+        // pdf.setFontSize(20);  
+        // pdf.setFontType('Bold');
+        // pdf.text(20,40,'Timebox Tool');
+
+        // add in the logo
+        var img = new Image()
+        img.src = 'images/logo_transparent.png'
+        pdf.addImage(img, 'png', 425, 15, 170, 50);
+
+        pdf.setFontSize(14);
+        // pdf.setFontType('Normal');
+        pdf.text(306,80, 'Calendar: ' + selectedCalendarName, 'center');
+        pdf.setFontSize(12);  
+        pdf.text(306,95,startTime + ' - ' + endTime, 'center');
+
+        // add in the chart
+        pdf.addImage(chart.getImageURI(), 10, 120);
+        pdf.setFontType('Bold');
+        pdf.setFontSize(20); 
+        pdf.text(306,150, 'Breakdown of Event Categories:', 'center');
+
+        // Now add a new page and add the table
+
+        var model = this.getView().byId('eventsTable').getModel();
+
+        // sort the data to match whats in the UI
+        const fieldSorter = (fields) => (a, b) => fields.map(o => {
+          let dir = 1;
+          if (o[0] === '-') { dir = -1; o=o.substring(1); }
+          return a[o] > b[o] ? dir : a[o] < b[o] ? -(dir) : 0;
+        }).reduce((p, n) => p ? p : n, 0);
+
+        var listOfdata = model.getData().sort(fieldSorter(['category', 'name', 'keyword']));
+
+        pdf.addPage();
+        let finalY = 0
+        pdf.text('Events', 40, finalY + 50);
+        pdf.setFontSize(12); 
+        pdf.setFontType('Normal');
+        pdf.autoTable({
+          startY: finalY + 55,
+          columns: [
+            { dataKey: 'name', header: 'Event' },
+            { dataKey: 'category', header: 'Category' },
+            { dataKey: 'keyword', header: 'Keyword' },
+            { dataKey: 'startTimeString', header: 'Date' },
+            { dataKey: 'time', header: 'Hours' }
+          ],
+          body: listOfdata
+        })
+
+        const pageCount = pdf.internal.getNumberOfPages();
+
+        // For each page, print the page number and the total pages
+        for(var i = 1; i <= pageCount; i++) {
+             // Go to page i
+            pdf.setPage(i);
+             //Print Page 1 of 4 for example
+            pdf.text('Page ' + String(i) + ' of ' + String(pageCount),pdf.internal.pageSize.width - 50,pdf.internal.pageSize.height - 20,null,null,"right");
+        }
+
+        pdf.save(selectedCalendarName.replace(/[^a-zA-Z0-9]+/g, ""));
+    },
 
     setChartAfterParsingEvents: function (categorizedData, parsedEvents) {
       // set the data back into the conteroller so it's retrievable after
@@ -284,6 +370,7 @@ sap.ui.define([
       this.validateCalendarStartEndDate();
       // acknowledge the selection change and update the status accordingly
       //this.getView().byId('configLabel').setText("Calendar '" + event.getParameters('selectedItem').selectedItem.getText() + "' loaded.");
+      selectedCalendarName = event.getParameters('selectedItem').selectedItem.getText();
       sap.m.MessageToast.show("Calendar '" + event.getParameters('selectedItem').selectedItem.getText() + "' loaded.", toastOptions);
     },
 
