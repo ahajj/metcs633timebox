@@ -55,7 +55,7 @@
 					</WizardStep>
 					<WizardStep id="signInAndChooseCalendarStep"
 									validated="false"
-									title="Sign and Choose Calendar"
+									title="Sign In and Choose Calendar"
 									complete="goButton"
 									activate="signInAndChoosseValidation">
 						<VBox>
