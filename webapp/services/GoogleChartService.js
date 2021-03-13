@@ -53,7 +53,14 @@ sap.ui.define('com/metcs633/services/GoogleChartService', [
 				var listModel = new sap.ui.model.json.JSONModel();
 				listModel.setData(pickedEvents);
 				controller.getView().byId('eventsTable').setModel(listModel);
+
+				// First set the table step as the current step
+				// this will activate and show it if it hasn't already been activated
+				controller._wizard.setCurrentStep(controller.getView().byId("showTable"));
+
+				// go to step will jump to the given step on the page
 				controller._wizard.goToStep(controller.getView().byId("showTable"));
+			
 			});
 		});
 
